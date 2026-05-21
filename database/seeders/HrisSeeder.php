@@ -154,7 +154,7 @@ class HrisSeeder extends Seeder
 
         /*
         |--------------------------------------------------------------------------
-        | Payroll
+        | Payrolls
         |--------------------------------------------------------------------------
         */
         for ($i = 1; $i <= 10; $i++) {
@@ -163,7 +163,7 @@ class HrisSeeder extends Seeder
             $bonus = rand(100000, 1000000);
             $deduction = rand(50000, 500000);
 
-            DB::table('payroll')->insert([
+            DB::table('payrolls')->insert([
                 'employee_id' => DB::table('employees')
                     ->inRandomOrder()
                     ->value('id'),
@@ -198,9 +198,9 @@ class HrisSeeder extends Seeder
                     ->value('id'),
 
                 'leave_type' => $faker->randomElement([
-                    'annual_leave',
-                    'sick_leave',
-                    'maternity_leave'
+                    'Annual Leave',
+                    'Sick Leave',
+                    'Maternity Leave'
                 ]),
 
                 'start_date' => $startDate->format('Y-m-d'),
@@ -211,9 +211,9 @@ class HrisSeeder extends Seeder
                     ->format('Y-m-d'),
 
                 'status' => $faker->randomElement([
-                    'pending',
-                    'approved',
-                    'rejected'
+                    'Pending',
+                    'Approved',
+                    'Rejected'
                 ]),
 
                 'created_at' => now(),
@@ -249,10 +249,10 @@ class HrisSeeder extends Seeder
                 'date' => $date->format('Y-m-d'),
 
                 'status' => $faker->randomElement([
-                    'present',
-                    'late',
-                    'absent',
-                    'leave'
+                    'Present',
+                    'Late',
+                    'Absent',
+                    'Leave'
                 ]),
 
                 'created_at' => now(),

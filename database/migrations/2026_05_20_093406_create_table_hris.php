@@ -13,7 +13,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('description');
-            $table->string('status');
+            $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -21,7 +21,7 @@ return new class extends Migration
         Schema::create('roles', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->string('description');
+            $table->text('description')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
@@ -30,13 +30,13 @@ return new class extends Migration
             $table->id();
             $table->string('fullname');
             $table->string('email')->unique();
-            $table->string('phone');
-            $table->string('address');
+            $table->string('phone')->nullable();
+            $table->text('address')->nullable();
             $table->date('birth_date');
             $table->date('hire_date');
-            $table->foreignId('department_id')->constrained('departments')->onDelete('cascade');
-            $table->foreignId('role_id')->constrained('roles')->onDelete('cascade');
-            $table->string('status');
+            $table->foreignId('department_id')->nullable()->constrained('departments')->nullOnDelete();
+            $table->foreignId('role_id')->nullable()->constrained('roles')->nullOnDelete();
+            $table->enum('status', ['active', 'inactive', 'resigned'])->default('active');
             $table->decimal('salary', 10, 2);
             $table->timestamps();
             $table->softDeletes();
@@ -45,17 +45,17 @@ return new class extends Migration
         Schema::create('tasks', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->string('description');
-            $table->foreignId('assigned_to')->constrained('employees')->onDelete('cascade');
+            $table->text('description')->nullable();
+            $table->foreignId('assigned_to')->nullable()->constrained('employees')->nulOnDelete();
             $table->date('due_date');
-            $table->string('status');
+            $table->enum('status', ['Pending', 'In Progress', 'Done'])->default('Pending');
             $table->timestamps();
             $table->softDeletes();
         });
 
-        Schema::create('payroll', function (Blueprint $table) {
+        Schema::create('payrolls', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('employee_id')->constrained('employees')->onDelete('cascade');
+            $table->foreignId('employee_id')->constrained('employees')->restrictOnDelete();
             $table->decimal('salary', 10, 2);
             $table->decimal('bonuses', 10, 2)->nullable();
             $table->decimal('deductions', 10, 2)->nullable();
@@ -67,22 +67,27 @@ return new class extends Migration
 
         Schema::create('leave_requests', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('employee_id')->constrained('employees')->onDelete('cascade');
+            $table->foreignId('employee_id')->constrained('employees')->restrictOnDelete();
             $table->string('leave_type');
             $table->date('start_date');
             $table->date('end_date');
-            $table->string('status');
+            $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
             $table->timestamps();
             $table->softDeletes();
         });
 
         Schema::create('presences', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('employee_id')->constrained('employees')->onDelete('cascade');
-            $table->date('check_in');
-            $table->date('check_out');
+            $table->foreignId('employee_id')->constrained('employees')->restrictedOnDelete();
+            $table->datetime('check_in');
+            $table->datetime('check_out');
             $table->date('date');
-            $table->string('status');
+            $table->enum('status', [
+                'Present',
+                'Late',
+                'Absent',
+                'Leave'
+            ])->default('present');
             $table->timestamps();
             $table->softDeletes();
         });
