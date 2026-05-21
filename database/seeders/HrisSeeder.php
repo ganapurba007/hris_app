@@ -142,9 +142,9 @@ class HrisSeeder extends Seeder
                     ->format('Y-m-d'),
 
                 'status' => $faker->randomElement([
-                    'pending',
-                    'in_progress',
-                    'completed'
+                    'Pending',
+                    'In Progress',
+                    'Done'
                 ]),
 
                 'created_at' => now(),
