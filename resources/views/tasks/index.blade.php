@@ -68,7 +68,7 @@
                                         @endif
                                     </td>
                                     <td class="space-x-1 py-2">
-                                        <a href="#" class="btn btn-info btn-sm">
+                                        <a href="{{ route('tasks.show', $task->id) }}" class="btn btn-info btn-sm">
                                             <i class="bi bi-eye-fill"></i>
                                         </a>
                                         <a href="{{ route('tasks.edit', $task->id) }}" class="btn btn-warning btn-sm">
