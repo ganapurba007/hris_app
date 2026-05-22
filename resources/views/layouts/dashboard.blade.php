@@ -103,9 +103,9 @@
                         </li>
                         </li>
                         <li class="sidebar-item ">
-                            <a href="{{ asset('template/index.html') }}" class='sidebar-link'>
+                            <a href="{{ route('employees.index') }}" class='sidebar-link'>
                                 <i class="bi bi-people-fill"></i>
-                                <span>Employee</span>
+                                <span>Employees</span>
                             </a>
                         </li>
                         <li class="sidebar-item ">

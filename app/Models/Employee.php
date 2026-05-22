@@ -14,7 +14,6 @@ class Employee extends Model
         'email',
         'phone',
         'address',
-        'address',
         'birth_date',
         'hire_date',
         'department_id',
@@ -22,4 +21,14 @@ class Employee extends Model
         'status',
         'salary'
     ];
+
+    public function department()
+    {
+        return $this->belongsTo(Department::class);
+    }
+
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
+    }
 }

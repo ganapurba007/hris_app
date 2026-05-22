@@ -4,14 +4,12 @@
         <div class="page-title">
             <div class="row">
                 <div class="col-12 col-md-6 order-md-1 order-last">
-                    <h3>Tasks</h3>
-                    {{-- <p class="text-subtitle text-muted">A sortable, searchable, paginated table without dependencies thanks
-                        to simple-datatables.</p> --}}
+                    <h3>Employees</h3>
                 </div>
                 <div class="col-12 col-md-6 order-md-2 order-first">
                     <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="index.html">Tasks</a></li>
+                            <li class="breadcrumb-item"><a href="index.html">Employees</a></li>
                             <li class="breadcrumb-item active" aria-current="page">List Data</li>
                         </ol>
                     </nav>
@@ -25,9 +23,9 @@
                         List Data
                     </h5>
                     <div class="align-item-center">
-                        <a href="{{ route('tasks.create') }}" class="btn btn-primary">
+                        <a href="{{ route('employees.create') }}" class="btn btn-primary">
                             <i class="bi bi-plus-circle-fill"></i>&nbsp;
-                            New Task</a>
+                            New Employee</a>
                     </div>
                 </div>
                 <div class="card-body">
@@ -43,54 +41,40 @@
                     <table class="table table-striped" id="table1">
                         <thead>
                             <tr>
-                                <th>Title</th>
-                                {{-- <th>Description</th> --}}
-                                <th>Assigned to</th>
-                                <th>Due Date</th>
+                                <th>Fullname</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Department</th>
+                                <th>Role</th>
                                 <th>Status</th>
                                 <th>Options</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($tasks as $task)
+                            @foreach ($employees as $employee)
                                 <tr>
-                                    <td>{{ $task->title }}</td>
-                                    {{-- <td>{{ $task->description }}</td> --}}
-                                    <td>{{ $task->employee->fullname }}</td>
-                                    <td>{{ $task->due_date->format('d M Y') }}</td>
+                                    <td>{{ $employee->fullname }}</td>
+                                    <td>{{ $employee->email }}</td>
+                                    <td>{{ $employee->phone }}</td>
+                                    <td>{{ $employee->department->name }}</td>
+                                    <td>{{ $employee->role->title }}</td>
                                     <td>
-                                        @if ($task->status === 'Pending')
-                                            <span class="badge bg-danger">Pending</span>
-                                        @elseif ($task->status === 'In Progress')
-                                            <span class="badge bg-warning">In Progress</span>
-                                        @elseif ($task->status === 'Done')
-                                            <span class="badge bg-success">Done</span>
+                                        @if ($employee->status === 'active')
+                                            <span class="badge bg-success">{{ Str::ucfirst($employee->status) }}</span>
+                                        @elseif ($employee->status === 'inactive')
+                                            <span class="badge bg-secondary">{{ Str::ucfirst($employee->status) }}</span>
+                                        @elseif ($employee->status === 'resigned')
+                                            <span class="badge bg-danger">{{ Str::ucfirst($employee->status) }}</span>
                                         @endif
                                     </td>
                                     <td class="space-x-1 py-2">
-                                        <a href="{{ route('tasks.show', $task->id) }}" class="btn btn-info btn-sm">
+                                        <a href="{{ route('employees.show', $employee->id) }}" class="btn btn-info btn-sm">
                                             <i class="bi bi-eye-fill"></i>
                                         </a>
-                                        <a href="{{ route('tasks.edit', $task->id) }}" class="btn btn-warning btn-sm">
+                                        <a href="{{ route('employees.edit', $employee->id) }}"
+                                            class="btn btn-warning btn-sm">
                                             <i class="bi bi-pencil-square"></i>
                                         </a>
-                                        @if ($task->status === 'Pending' || $task->status === 'In Progress')
-                                            <a href="{{ route('tasks.done', $task->id) }}" class="btn btn-success btn-sm">
-                                                <i class="bi bi-check-square-fill"></i>
-                                            </a>
-                                        @elseif ($task->status === 'Done')
-                                            <a href="{{ route('tasks.pending', $task->id) }}"
-                                                class="btn btn-secondary btn-sm">
-                                                <i class="bi bi-hourglass-split"></i>
-                                            </a>
-                                        @endif
-                                        {{-- <form action="{{ route('tasks.destroy', $task->id) }}" method="POST" style="display: inline">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger btn-sm">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </form> --}}
                                         <button type="button" class="btn btn-danger btn-sm block" data-bs-toggle="modal"
                                             data-bs-target="#deleteModal">
                                             <i class="bi bi-trash"></i>
@@ -121,7 +105,7 @@
                 </div>
                 <div class="modal-body">
                     <p>
-                        Are you sure you want to delete this task?
+                        Are you sure you want to delete this employee?
                     </p>
                 </div>
                 <div class="modal-footer">
@@ -129,7 +113,7 @@
                         <i class="bx bx-x d-block d-sm-none"></i>
                         <span class="d-none d-sm-block">Cancel</span>
                     </button>
-                    <form action="{{ route('tasks.destroy', $task->id) }}" method="POST" style="display: inline">
+                    <form action="{{ route('employees.destroy', $employee->id) }}" method="POST" style="display: inline">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="btn btn-danger ms-1" data-bs-dismiss="modal">
@@ -142,4 +126,11 @@
             </div>
         </div>
     </div>
+
+
+    <script>
+        $(document).ready(function() {
+            $('#table1').DataTable();
+        });
+    </script>
 @endsection;
