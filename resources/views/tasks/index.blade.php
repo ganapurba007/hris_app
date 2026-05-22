@@ -25,12 +25,20 @@
                         List Data
                     </h5>
                     <div class="align-item-center">
-                        <a href="#" class="btn btn-primary">
+                        <a href="{{ route('tasks.create') }}" class="btn btn-primary">
                             <i class="bi bi-plus-circle-fill"></i>&nbsp;
                             New Task</a>
                     </div>
                 </div>
                 <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            @if (session('success'))
+                                <div class="alert alert-success"><i class="bi bi-check-circle"></i> {{ session('success') }}.
+                                </div>
+                            @endif
+                        </div>
+                    </div>
                     <table class="table table-striped" id="table1">
                         <thead>
                             <tr>
@@ -62,17 +70,17 @@
                                         <a href="#" class="btn btn-info btn-sm">
                                             <i class="bi bi-eye-fill"></i>
                                         </a>
-                                        <a href="#" class="btn btn-warning btn-sm">
+                                        <a href="{{ route('tasks.edit', $task->id) }}" class="btn btn-warning btn-sm">
                                             <i class="bi bi-pencil-square"></i>
                                         </a>
                                         @if ($task->status === 'Pending' || $task->status === 'In Progress')
-                                        <a href="#" class="btn btn-success btn-sm">
-                                            <i class="bi bi-check-square-fill"></i>
-                                        </a>
+                                            <a href="#" class="btn btn-success btn-sm">
+                                                <i class="bi bi-check-square-fill"></i>
+                                            </a>
                                         @elseif ($task->status === 'Done')
-                                        <a href="#" class="btn btn-secondary btn-sm">
-                                            <i class="bi bi-hourglass-split"></i>
-                                        </a>
+                                            <a href="#" class="btn btn-secondary btn-sm">
+                                                <i class="bi bi-hourglass-split"></i>
+                                            </a>
                                         @endif
                                         <a href="#" class="btn btn-danger btn-sm">
                                             <i class="bi bi-trash"></i>

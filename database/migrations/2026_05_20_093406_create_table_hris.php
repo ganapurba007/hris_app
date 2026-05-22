@@ -46,7 +46,7 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->text('description')->nullable();
-            $table->foreignId('assigned_to')->nullable()->constrained('employees')->nulOnDelete();
+            $table->foreignId('assigned_to')->nullable()->constrained('employees')->nullOnDelete();
             $table->date('due_date');
             $table->enum('status', ['Pending', 'In Progress', 'Done'])->default('Pending');
             $table->timestamps();
