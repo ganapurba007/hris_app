@@ -56,6 +56,19 @@ class TaskController extends Controller
         return redirect()->route('tasks.index')->with('success', 'Task updated successfully');
     }
 
+    public function done(int $id)
+    {
+        $task = Task::find($id);
+        $task->update(['status' => 'Done']);
+        return redirect()->route('tasks.index')->with('success', 'Task Mark as Done successfully');
+    }
+    public function pending(int $id)
+    {
+        $task = Task::find($id);
+        $task->update(['status' => 'Pending']);
+        return redirect()->route('tasks.index')->with('success', 'Task Mark as Pending successfully');
+    }
+
     public function destroy(Task $task)
     {
         $task->delete();

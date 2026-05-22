@@ -75,11 +75,11 @@
                                             <i class="bi bi-pencil-square"></i>
                                         </a>
                                         @if ($task->status === 'Pending' || $task->status === 'In Progress')
-                                            <a href="#" class="btn btn-success btn-sm">
+                                            <a href="{{ route('tasks.done', $task->id) }}" class="btn btn-success btn-sm">
                                                 <i class="bi bi-check-square-fill"></i>
                                             </a>
                                         @elseif ($task->status === 'Done')
-                                            <a href="#" class="btn btn-secondary btn-sm">
+                                            <a href="{{ route('tasks.pending', $task->id) }}" class="btn btn-secondary btn-sm">
                                                 <i class="bi bi-hourglass-split"></i>
                                             </a>
                                         @endif
