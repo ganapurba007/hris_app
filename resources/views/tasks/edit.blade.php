@@ -13,6 +13,12 @@
                     </ol>
                 </nav>
             </div>
+            <div class="col-md-12">
+                @if (session('error'))
+                    <div class="alert alert-danger"><i class="bi bi-check-circle"></i> {{ session('error') }}.
+                    </div>
+                @endif
+            </div>
         </div>
     </div>
 
@@ -23,6 +29,7 @@
                     <form action="{{ route('tasks.update', $task->id) }}" method="POST">
 
                         <div class="card-body">
+
                             @csrf
                             @method('PUT')
                             {{-- {{ dd($task) }} --}}
@@ -60,7 +67,7 @@
                                             <option value="">Select an Employee</option>
                                             @foreach ($employees as $employee)
                                                 <option value="{{ $employee->id }}"
-                                                    {{ old('assigned_to', $task->assigned_to) == $employee->id  ? 'selected' : '' }}>
+                                                    {{ old('assigned_to', $task->assigned_to) == $employee->id ? 'selected' : '' }}>
                                                     {{ $employee->fullname }}</option>
                                             @endforeach
                                         </select>
@@ -76,7 +83,8 @@
                                         <label for="due_date" class="form-label">Due Date</label>
                                         <input type="date" name="due_date" id="due_date"
                                             class="form-control flatpickr-always-open @error('due_date') is-invalid @enderror"
-                                            placeholder="Select date.." value="{{ old('due_date', $task->due_date) ? old('due_date', $task->due_date)->format('Y-m-d') : '' }}">
+                                            placeholder="Select date.."
+                                            value="{{ old('due_date', $task->due_date) ? old('due_date', $task->due_date)->format('Y-m-d') : '' }}">
                                         @error('due_date')
                                             <div class="invalid-feedback">
                                                 {{ $message }}
@@ -91,8 +99,10 @@
                                             class="choices form-select @error('status') is-invalid @enderror">
                                             <option value="">Select Status</option>
                                             <option value="In Progress"
-                                                {{ old('status', $task->status) == 'In Progress' ? 'selected' : '' }}>In Progress</option>
-                                            <option value="Pending" {{ old('status', $task->status) == 'Pending' ? 'selected' : '' }}>
+                                                {{ old('status', $task->status) == 'In Progress' ? 'selected' : '' }}>In
+                                                Progress</option>
+                                            <option value="Pending"
+                                                {{ old('status', $task->status) == 'Pending' ? 'selected' : '' }}>
                                                 Pending</option>
                                         </select>
 
