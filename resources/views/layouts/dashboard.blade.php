@@ -109,7 +109,7 @@
                             </a>
                         </li>
                         <li class="sidebar-item ">
-                            <a href="{{ asset('template/index.html') }}" class='sidebar-link'>
+                            <a href="{{ route('departments.index') }}" class='sidebar-link'>
                                 <i class="bi bi-briefcase"></i>
                                 <span>Deparments</span>
                             </a>
