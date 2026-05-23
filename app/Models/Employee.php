@@ -22,6 +22,10 @@ class Employee extends Model
         'salary'
     ];
 
+    protected $casts = [
+        'salary' => 'integer'
+    ];
+
     public function department()
     {
         return $this->belongsTo(Department::class);

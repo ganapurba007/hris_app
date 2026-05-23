@@ -34,8 +34,11 @@
                     <div class="row">
                         <div class="col-md-12">
                             @if (session('success'))
-                                <div class="alert alert-success"><i class="bi bi-check-circle"></i>
+                                <div class="alert alert-success alert-dismissible fade show" role="alert""><i
+                                        class="bi bi-check-circle"></i>
                                     {{ session('success') }}.
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                        aria-label="Close"></button>
                                 </div>
                             @endif
                         </div>
@@ -84,17 +87,24 @@
                                                 <i class="bi bi-hourglass-split"></i>
                                             </a>
                                         @endif
-                                        {{-- <form action="{{ route('tasks.destroy', $task->id) }}" method="POST" style="display: inline">
+                                    
+                                         {{-- MODAL --}}
+                                        {{-- <button type="button" class="btn btn-danger btn-sm block" data-bs-toggle="modal"
+                                            data-bs-target="#deleteModal" data-id="{{ $task->id }}"
+                                            data-name="{{ $task->fullname }}">
+                                            <i class="bi bi-trash"></i>
+                                        </button> --}}
+
+                                        {{-- CONFIRM BAWAAN BROWSER --}}
+                                        <form action="{{ route('tasks.destroy', $task->id) }}" method="POST"
+                                            style="display:inline"
+                                            onsubmit="return confirm('Are you sure you want to delete {{ $task->title }}?')">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-danger btn-sm">
                                                 <i class="bi bi-trash"></i>
                                             </button>
-                                        </form> --}}
-                                        <button type="button" class="btn btn-danger btn-sm block" data-bs-toggle="modal"
-                                            data-bs-target="#deleteModal">
-                                            <i class="bi bi-trash"></i>
-                                        </button>
+                                        </form>
 
                                     </td>
                                 </tr>

@@ -32,8 +32,11 @@
                     <div class="row">
                         <div class="col-md-12">
                             @if (session('success'))
-                                <div class="alert alert-success"><i class="bi bi-check-circle"></i>
+                                <div class="alert alert-success alert-dismissible fade show" role="alert"><i
+                                        class="bi bi-check-circle"></i>
                                     {{ session('success') }}.
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                        aria-label="Close"></button>
                                 </div>
                             @endif
                         </div>
@@ -75,10 +78,25 @@
                                             class="btn btn-warning btn-sm">
                                             <i class="bi bi-pencil-square"></i>
                                         </a>
-                                        <button type="button" class="btn btn-danger btn-sm block" data-bs-toggle="modal"
-                                            data-bs-target="#deleteModal">
+
+                                        {{-- MODAL --}}
+                                        {{-- <button type="button" class="btn btn-danger btn-sm block" data-bs-toggle="modal"
+                                            data-bs-target="#deleteModal" data-id="{{ $employee->id }}"
+                                            data-name="{{ $employee->fullname }}">
                                             <i class="bi bi-trash"></i>
-                                        </button>
+                                        </button> --}}
+
+                                        {{-- CONFIRM BAWAAN BROWSER --}}
+                                        <form action="{{ route('employees.destroy', $employee->id) }}" method="POST"
+                                            style="display:inline"
+                                            onsubmit="return confirm('Are you sure you want to delete {{ $employee->fullname }}?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger btn-sm">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
+
 
                                     </td>
                                 </tr>
@@ -92,7 +110,7 @@
 
 
     {{-- MODAL --}}
-    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalTitle"
+    {{-- <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalTitle"
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-centered modal-dialog-scrollable" role="document">
             <div class="modal-content">
@@ -125,7 +143,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 
 
     <script>
