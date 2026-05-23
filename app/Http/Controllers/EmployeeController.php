@@ -11,26 +11,32 @@ class EmployeeController extends Controller
 {
     public function index()
     {
-        $employees = Employee::all();
+        $employees = Employee::orderBy('created_at', 'desc')->get();
         return view('employees.index', compact('employees'));
     }
 
+
     public function create()
     {
-        // $employees = Employee::get()->where('status', 'active');
-        return view('employees.create', compact('employees'));
+        $departments = Department::get()->where('status', 'active');
+        $roles = Role::all();
+        return view('employees.create', compact('departments', 'roles'));
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string|max:255',
-            'assigned_to' => 'required|exists:employees,id',
-            'due_date' => 'required|date',
-            'status' => 'required|in:Pending,In Progress',
+            'fullname' => 'required|string|max:255',
+            'email' => 'required|email',
+            'phone' => 'required|digits_between:10,12',
+            'address' => 'required|string|max:255',
+            'birth_date' => 'required|date',
+            'hire_date' => 'required|date',
+            'department_id' => 'required|exists:departments,id',
+            'role_id' => 'required|exists:roles,id',
+            'salary' => 'required|numeric|min:0|max_digits:15',
+            'status' => 'required|in:active,inactive,resigned',
         ]);
-
 
         Employee::create($validated);
         return redirect()->route('employees.index')->with('success', 'Employee created successfully');
@@ -64,6 +70,6 @@ class EmployeeController extends Controller
 
     public function show(Employee $employee)
     {
-        return view('employees.show', compact('task'));
+        return view('employees.show', compact('employee'));
     }
 }

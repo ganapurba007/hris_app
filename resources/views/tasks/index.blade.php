@@ -56,7 +56,7 @@
                                 <tr>
                                     <td>{{ $task->title }}</td>
                                     {{-- <td>{{ $task->description }}</td> --}}
-                                    <td>{{ $task->employee->fullname }}</td>
+                                    <td>{{ $task->employee->fullname ?? '-' }} </td>
                                     <td>{{ $task->due_date->format('d M Y') }}</td>
                                     <td>
                                         @if ($task->status === 'Pending')

@@ -11,8 +11,8 @@ class TaskController extends Controller
 {
     public function index()
     {
-        $tasks = Task::orderBy('created_at', 'desc')->get();
-        return view('tasks.index', with(['tasks' => $tasks]));
+        $tasks = Task::with('employee')->orderBy('created_at', 'desc')->get();
+        return view('tasks.index', compact('tasks'));
     }
 
     public function create()

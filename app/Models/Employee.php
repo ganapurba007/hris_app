@@ -31,4 +31,9 @@ class Employee extends Model
     {
         return $this->belongsTo(Role::class);
     }
+
+    public function task()
+    {
+        return $this->hasMany(Task::class, 'assigned_to');
+    }
 }
