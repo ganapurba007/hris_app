@@ -16,23 +16,16 @@ class DepartmentController extends Controller
 
     public function create()
     {
-        $departments = Department::get()->where('status', 'active');
+        $departments = Department::all();
         return view('departments.create', compact('departments'));
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'fullname' => 'required|string|max:255',
-            'email' => 'required|email',
-            'phone' => 'required|digits_between:10,12',
-            'address' => 'required|string|max:255',
-            'birth_date' => 'required|date',
-            'hire_date' => 'required|date',
-            'department_id' => 'required|exists:departments,id',
-            'role_id' => 'required|exists:roles,id',
-            'salary' => 'required|numeric|min:0|max_digits:20',
-            'status' => 'required|in:active,inactive,resigned',
+            'name' => 'required|string|max:255',
+            'description' => 'required|string|max:255',
+            'status' => 'required|in:active,inactive',
         ]);
 
         Department::create($validated);
