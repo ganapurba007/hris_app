@@ -57,9 +57,9 @@
                                     <td>{{ $role->title }}</td>
                                     <td>{{ $role->description }}</td>
                                     <td class="space-x-1 py-2">
-                                        <a href="{{ route('roles.show', $role->id) }}" class="btn btn-info btn-sm">
+                                        {{-- <a href="{{ route('roles.show', $role->id) }}" class="btn btn-info btn-sm">
                                             <i class="bi bi-eye-fill"></i>
-                                        </a>
+                                        </a> --}}
                                         <a href="{{ route('roles.edit', $role->id) }}" class="btn btn-warning btn-sm">
                                             <i class="bi bi-pencil-square"></i>
                                         </a>

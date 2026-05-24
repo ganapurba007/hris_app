@@ -122,7 +122,7 @@
                         </li>
                         </li>
                         <li class="sidebar-item ">
-                            <a href="{{ asset('template/index.html') }}" class='sidebar-link'>
+                            <a href="{{ route('presences.index') }}" class='sidebar-link'>
                                 <i class="bi bi-table"></i>
                                 <span>Presences</span>
                             </a>
