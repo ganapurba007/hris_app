@@ -92,7 +92,7 @@
                                             <label for="password-horizontal">Salary</label>
                                         </div>
                                         <div class="col-md-8 form-group">
-                                            <h6>: Rp{{ number_format($employee->salary) }}</h6>
+                                            <h6>: {{ number_format($employee->salary) }}</h6>
                                         </div>
 
                                         <div class="col-md-4">

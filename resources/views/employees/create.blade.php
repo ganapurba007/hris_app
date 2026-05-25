@@ -140,7 +140,7 @@
                                         @enderror
                                     </div>
                                 </div>
-                                      <div class="col-sm-12">
+                                <div class="col-sm-12">
                                     <div class="form-group mb-3">
                                         <label class="form-label" for="salary">Salary</label>
                                         <input type="number" name="salary" id="salary"

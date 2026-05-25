@@ -40,4 +40,9 @@ class Employee extends Model
     {
         return $this->hasMany(Task::class, 'assigned_to');
     }
+
+    public function payroll()
+    {
+        return $this->hasMany(Payroll::class);
+    }
 }
