@@ -137,7 +137,7 @@
                         </li>
                         </li>
                         <li class="sidebar-item ">
-                            <a href="{{ asset('template/index.html') }}" class='sidebar-link'>
+                            <a href="{{ route('leave_requests.index') }}" class='sidebar-link'>
                                 <i class="bi bi-shift-fill"></i>
                                 <span>Leave Request</span>
                             </a>

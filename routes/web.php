@@ -5,10 +5,12 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\LeaveRequestController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PresenceController;
 use App\Http\Controllers\PayrollController;
 use App\Models\Department;
+use App\Models\LeaveRequest;
 use App\Models\Payroll;
 use Illuminate\Support\Facades\Route;
 
@@ -31,6 +33,9 @@ Route::resource('/departments', DepartmentController::class);
 Route::resource('/roles', RoleController::class);
 Route::resource('/presences', PresenceController::class);
 Route::resource('/payrolls', PayrollController::class);
+Route::resource('/leave_requests', LeaveRequestController::class);
+Route::get('leave_requests/approved/{id}', [LeaveRequestController::class, 'approved'])->name('leave_requests.approved');
+Route::get('leave_requests/rejected/{id}', [LeaveRequestController::class, 'rejected'])->name('leave_requests.rejected');
 
 
 Route::middleware('auth')->group(function () {
