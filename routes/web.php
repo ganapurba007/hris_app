@@ -20,7 +20,7 @@ Route::get('/', function () {
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard')->middleware(['role:HR']);
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard')->middleware(['role:HR,Backend Developer,Frontend Developer,Finance Staff']);
 
     // HR
     Route::middleware(['role:HR'])->group(function () {
