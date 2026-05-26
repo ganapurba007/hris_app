@@ -23,9 +23,11 @@
                         List Data
                     </h5>
                     <div class="align-item-center">
-                        <a href="{{ route('payrolls.create') }}" class="btn btn-primary">
-                            <i class="bi bi-plus-circle-fill"></i>&nbsp;
-                            New Payroll</a>
+                        @if (session('role') == 'HR')
+                            <a href="{{ route('payrolls.create') }}" class="btn btn-primary">
+                                <i class="bi bi-plus-circle-fill"></i>&nbsp;
+                                New Payroll</a>
+                        @endif
                     </div>
                 </div>
                 <div class="card-body">
@@ -66,11 +68,14 @@
                                         <a href="{{ route('payrolls.show', $payroll->id) }}" class="btn btn-info btn-sm">
                                             <i class="bi bi-eye-fill"></i>
                                         </a>
-                                        <a href="{{ route('payrolls.edit', $payroll->id) }}" class="btn btn-warning btn-sm">
-                                            <i class="bi bi-pencil-square"></i>
-                                        </a>
-                                    
-                                         {{-- MODAL --}}
+                                        @if (session('role') == 'HR')
+                                            <a href="{{ route('payrolls.edit', $payroll->id) }}"
+                                                class="btn btn-warning btn-sm">
+                                                <i class="bi bi-pencil-square"></i>
+                                            </a>
+                                        @endif
+
+                                        {{-- MODAL --}}
                                         {{-- <button type="button" class="btn btn-danger btn-sm block" data-bs-toggle="modal"
                                             data-bs-target="#deleteModal" data-id="{{ $payroll->id }}"
                                             data-name="{{ $payroll->fullname }}">
@@ -78,15 +83,17 @@
                                         </button> --}}
 
                                         {{-- CONFIRM BAWAAN BROWSER --}}
-                                        <form action="{{ route('payrolls.destroy', $payroll->id) }}" method="POST"
-                                            style="display:inline"
-                                            onsubmit="return confirm('Are you sure you want to delete {{ $payroll->employee->fullname ?? 'this data' }}?')">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger btn-sm">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </form>
+                                        @if (session('role') == 'HR')
+                                            <form action="{{ route('payrolls.destroy', $payroll->id) }}" method="POST"
+                                                style="display:inline"
+                                                onsubmit="return confirm('Are you sure you want to delete {{ $payroll->employee->fullname ?? 'this data' }}?')">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-danger btn-sm">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </form>
+                                        @endif
 
                                     </td>
                                 </tr>
