@@ -12,36 +12,38 @@ use App\Http\Controllers\PayrollController;
 use App\Models\Department;
 use App\Models\LeaveRequest;
 use App\Models\Payroll;
+use App\Models\Role;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-// Route::get('/dashboard', function () {
-//     return view('dashboard');
-// })->middleware(['auth', 'verified'])->name('dashboard');
-
-Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-
-Route::resource('/tasks', TaskController::class);
-Route::get('tasks/done/{id}', [TaskController::class, 'done'])->name('tasks.done');
-Route::get('tasks/pending/{id}', [TaskController::class, 'pending'])->name('tasks.pending');
-
-Route::resource('/employees', EmployeeController::class);
-Route::resource('/departments', DepartmentController::class);
-Route::resource('/roles', RoleController::class);
-Route::resource('/presences', PresenceController::class);
-Route::resource('/payrolls', PayrollController::class);
-Route::resource('/leave_requests', LeaveRequestController::class);
-Route::get('leave_requests/approved/{id}', [LeaveRequestController::class, 'approved'])->name('leave_requests.approved');
-Route::get('leave_requests/rejected/{id}', [LeaveRequestController::class, 'rejected'])->name('leave_requests.rejected');
-
-
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard')->middleware(['role:HR']);
+
+    // HR
+    Route::middleware(['role:HR'])->group(function () {
+        Route::resource('/employees', EmployeeController::class)->middleware(['role:HR']);
+        Route::resource('/departments', DepartmentController::class)->middleware(['role:HR']);
+        Route::resource('/roles', RoleController::class)->middleware(['role:HR']);
+        Route::get('leave_requests/approved/{id}', [LeaveRequestController::class, 'approved'])->name('leave_requests.approved')->middleware(['role:HR']);
+        Route::get('leave_requests/rejected/{id}', [LeaveRequestController::class, 'rejected'])->name('leave_requests.rejected')->middleware(['role:HR']);
+    });
+
+    // STAFF
+    Route::resource('/presences', PresenceController::class)->middleware(['role:HR,Backend Developer,Frontend Developer,Finance Staff']);
+    Route::resource('/payrolls', PayrollController::class)->middleware(['role:HR,Backend Developer,Frontend Developer,Finance Staff']);
+    Route::resource('/tasks', TaskController::class)->middleware(['role:HR,Backend Developer,Frontend Developer,Finance Staff']);
+    Route::get('tasks/done/{id}', [TaskController::class, 'done'])->name('tasks.done')->middleware(['role:HR,Backend Developer,Frontend Developer,Finance Staff']);
+    Route::get('tasks/pending/{id}', [TaskController::class, 'pending'])->name('tasks.pending')->middleware(['role:HR,Backend Developer,Frontend Developer,Finance Staff']);
+
+    Route::resource('/leave_requests', LeaveRequestController::class)->middleware(['role:HR,Backend Developer,Frontend Developer,Finance Staff']);
+
+
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit')->middleware(['role:HR,Backend Developer,Frontend Developer,Finance Staff']);
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update')->middleware(['role:HR,Backend Developer,Frontend Developer,Finance Staff']);
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy')->middleware(['role:HR,Backend Developer,Frontend Developer,Finance Staff']);
 });
 
 require __DIR__ . '/auth.php';

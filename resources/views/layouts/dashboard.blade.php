@@ -17,7 +17,7 @@
 
 
 
-   
+
     <link rel="stylesheet" href="{{ asset('template/assets/compiled/css/app.css') }}">
     <link rel="stylesheet" href="{{ asset('template/assets/compiled/css/app-dark.css') }}">
     <link rel="stylesheet" href="{{ asset('template/assets/compiled/css/iconly.css') }}">
@@ -26,7 +26,7 @@
     <link rel="stylesheet" href="{{ asset('template/assets/extensions/simple-datatables/style.css') }}">
     <link rel="stylesheet" href="{{ asset('template/assets/compiled/css/table-datatable.css') }}">
 
-        {{-- Datepicker --}}
+    {{-- Datepicker --}}
     <link rel="stylesheet" href="{{ asset('template/assets/extensions/flatpickr/flatpickr.min.css') }}">
 
 
@@ -44,12 +44,7 @@
             <div class="sidebar-wrapper active">
                 <div class="sidebar-header position-relative">
                     <div class="d-flex justify-content-between align-items-center">
-                        <div class="logo">
-                            <a href="{{ route('dashboard') }}"><img
-                                    src="{{ asset('template/assets/compiled/svg/logo.svg') }}" alt="Logo"
-                                    srcset=""></a>
-                        </div>
-                        <div class="theme-toggle d-flex gap-2  align-items-center mt-2">
+                        <div class="theme-toggle d-flex gap-2  align-items-center">
                             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
                                 aria-hidden="true" role="img" class="iconify iconify--system-uicons" width="20"
                                 height="20" preserveAspectRatio="xMidYMid meet" viewBox="0 0 21 21">
@@ -85,72 +80,82 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="sidebar-menu">
                     <ul class="menu">
+                        <div class="d-flex align-items-center">
+                            <div class="avatar avatar-xl">
+                                <img src="{{ asset('template/assets/compiled/svg/favicon.svg') }}" alt="User Images">
+                            </div>
+                            <div class="ms-3 name">
+                                <h5 class="font-bold">{{ auth()->user()->employee->fullname ?? 'User' }}</h5>
+                                {{-- <h6 class="text-muted mb-0">@johnducky</h6> --}}
+                            </div>
+                        </div>
                         <li class="sidebar-title">Menu</li>
+                        @if (session('role') === 'HR')
+                            <li class="sidebar-item active ">
+                                <a href="{{ route('dashboard') }}" class='sidebar-link'>
+                                    <i class="bi bi-grid-fill"></i>
+                                    <span>Dashboard</span>
+                                </a>
+                            </li>
+                            <li class="sidebar-item ">
+                                <a href="{{ route('employees.index') }}" class='sidebar-link'>
+                                    <i class="bi bi-people-fill"></i>
+                                    <span>Employees</span>
+                                </a>
+                            </li>
+                            <li class="sidebar-item ">
+                                <a href="{{ route('departments.index') }}" class='sidebar-link'>
+                                    <i class="bi bi-briefcase"></i>
+                                    <span>Deparments</span>
+                                </a>
+                            </li>
+                            <li class="sidebar-item ">
+                                <a href="{{ route('roles.index') }}" class='sidebar-link'>
+                                    <i class="bi bi-tag"></i>
+                                    <span>Roles</span>
+                                </a>
+                            </li>
+                        @endif
 
-                        <li class="sidebar-item active ">
-                            <a href="{{ route('dashboard') }}" class='sidebar-link'>
-                                <i class="bi bi-grid-fill"></i>
-                                <span>Dashboard</span>
-                            </a>
-                        </li>
-                        <li class="sidebar-item ">
-                            <a href="{{ route('tasks.index') }}" class='sidebar-link'>
-                                <i class="bi bi-check-circle-fill"></i>
-                                <span>Tasks</span>
-                            </a>
-                        </li>
-                        </li>
-                        <li class="sidebar-item ">
-                            <a href="{{ route('employees.index') }}" class='sidebar-link'>
-                                <i class="bi bi-people-fill"></i>
-                                <span>Employees</span>
-                            </a>
-                        </li>
-                        <li class="sidebar-item ">
-                            <a href="{{ route('departments.index') }}" class='sidebar-link'>
-                                <i class="bi bi-briefcase"></i>
-                                <span>Deparments</span>
-                            </a>
+                        @if (in_array(session('role'), ['HR','Backend Developer','Frontend Developer','Finance Staff']))
+                            <li class="sidebar-item ">
+                                <a href="{{ route('tasks.index') }}" class='sidebar-link'>
+                                    <i class="bi bi-check-circle-fill"></i>
+                                    <span>Tasks</span>
+                                </a>
+                            </li>
 
-                        <li class="sidebar-item ">
-                            <a href="{{ route('roles.index') }}" class='sidebar-link'>
-                                <i class="bi bi-tag"></i>
-                                <span>Roles</span>
-                            </a>
-                        </li>
-                        </li>
-                        <li class="sidebar-item ">
-                            <a href="{{ route('presences.index') }}" class='sidebar-link'>
-                                <i class="bi bi-table"></i>
-                                <span>Presences</span>
-                            </a>
-                        </li>
+                            <li class="sidebar-item ">
+                                <a href="{{ route('presences.index') }}" class='sidebar-link'>
+                                    <i class="bi bi-table"></i>
+                                    <span>Presences</span>
+                                </a>
+                            </li>
 
-                        </li>
-                        <li class="sidebar-item ">
-                            <a href="{{ route('payrolls.index') }}" class='sidebar-link'>
-                                <i class="bi bi-currency-dollar"></i>
-                                <span>Payrolls</span>
-                            </a>
-                        </li>
-                        </li>
-                        <li class="sidebar-item ">
-                            <a href="{{ route('leave_requests.index') }}" class='sidebar-link'>
-                                <i class="bi bi-shift-fill"></i>
-                                <span>Leave Request</span>
-                            </a>
-                        </li>
-                        </li>
-                        </li>
-                        <li class="sidebar-item ">
-                            <a href="{{ asset('template/index.html') }}" class='sidebar-link'>
-                                <i class="bi bi-box-arrow-right"></i>
-                                <span>Logout</span>
-                            </a>
-                        </li>
+                            <li class="sidebar-item ">
+                                <a href="{{ route('payrolls.index') }}" class='sidebar-link'>
+                                    <i class="bi bi-currency-dollar"></i>
+                                    <span>Payrolls</span>
+                                </a>
+                            </li>
 
+                            <li class="sidebar-item ">
+                                <a href="{{ route('leave_requests.index') }}" class='sidebar-link'>
+                                    <i class="bi bi-shift-fill"></i>
+                                    <span>Leave Request</span>
+                                </a>
+                            </li>
+                            
+                            <li class="sidebar-item ">
+                                <a href="{{ url('logout') }}" class='sidebar-link'>
+                                    <i class="bi bi-box-arrow-right"></i>
+                                    <span>Logout</span>
+                                </a>
+                            </li>
+                        @endif
 
                     </ul>
                 </div>
@@ -195,8 +200,8 @@
     <script src="{{ asset('template/assets/static/js/pages/form-element-select.js') }}"></script>
 
     {{-- Datepicker --}}
-<script src="{{ asset('template/assets/extensions/flatpickr/flatpickr.min.js') }}"></script>
-<script src="{{ asset('template/assets/static/js/pages/date-picker.js') }}"></script>
+    <script src="{{ asset('template/assets/extensions/flatpickr/flatpickr.min.js') }}"></script>
+    <script src="{{ asset('template/assets/static/js/pages/date-picker.js') }}"></script>
 </body>
 
 </html>
