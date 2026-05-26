@@ -23,9 +23,9 @@
                         List Data
                     </h5>
                     <div class="align-item-center">
-                        <a href="{{ route('presences.create') }}" class="btn btn-primary">
-                            <i class="bi bi-plus-circle-fill"></i>&nbsp;
-                            New Presence</a>
+                            <a href="{{ route('presences.create') }}" class="btn btn-primary">
+                                <i class="bi bi-plus-circle-fill"></i>&nbsp;
+                                New Presence</a>
                     </div>
                 </div>
                 <div class="card-body">
@@ -49,7 +49,9 @@
                                 <th>Check Out</th>
                                 <th>Date</th>
                                 <th>Status</th>
-                                <th>Options</th>
+                                @if (session('role') == 'HR')
+                                    <th>Options</th>
+                                @endif
                             </tr>
                         </thead>
                         <tbody>
@@ -74,11 +76,14 @@
                                         {{-- <a href="{{ route('presences.show', $presence->id) }}" class="btn btn-info btn-sm">
                                             <i class="bi bi-eye-fill"></i>
                                         </a> --}}
-                                        <a href="{{ route('presences.edit', $presence->id) }}" class="btn btn-warning btn-sm">
-                                            <i class="bi bi-pencil-square"></i>
-                                        </a>
-                                    
-                                         {{-- MODAL --}}
+                                        @if (session('role') == 'HR')
+                                            <a href="{{ route('presences.edit', $presence->id) }}"
+                                                class="btn btn-warning btn-sm">
+                                                <i class="bi bi-pencil-square"></i>
+                                            </a>
+                                        @endif
+
+                                        {{-- MODAL --}}
                                         {{-- <button type="button" class="btn btn-danger btn-sm block" data-bs-toggle="modal"
                                             data-bs-target="#deleteModal" data-id="{{ $presence->id }}"
                                             data-name="{{ $presence->fullname }}">
@@ -86,15 +91,17 @@
                                         </button> --}}
 
                                         {{-- CONFIRM BAWAAN BROWSER --}}
-                                        <form action="{{ route('presences.destroy', $presence->id) }}" method="POST"
-                                            style="display:inline"
-                                            onsubmit="return confirm('Are you sure you want to delete {{ $presence->employee->fullname ?? 'this data' }}?')">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger btn-sm">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </form>
+                                        @if (session('role') == 'HR')
+                                            <form action="{{ route('presences.destroy', $presence->id) }}" method="POST"
+                                                style="display:inline"
+                                                onsubmit="return confirm('Are you sure you want to delete {{ $presence->employee->fullname ?? 'this data' }}?')">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-danger btn-sm">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </form>
+                                        @endif
 
                                     </td>
                                 </tr>
@@ -108,7 +115,7 @@
 
 
     {{-- MODAL --}}
-    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalTitle"
+    {{-- <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalTitle"
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-centered modal-dialog-scrollable" role="document">
             <div class="modal-content">
@@ -141,5 +148,5 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 @endsection;

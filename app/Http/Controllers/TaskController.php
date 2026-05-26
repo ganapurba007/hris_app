@@ -5,17 +5,19 @@ namespace App\Http\Controllers;
 use App\Models\Employee;
 use App\Models\Task;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 
 class TaskController extends Controller
 {
     public function index()
     {
-        if (session('role') === 'HR') {
-            $tasks = Task::with('employee')->orderBy('created_at', 'desc')->get();
-        } else {
-            $tasks = Task::with('employee')->where('assigned_to', session('employee_id'))->orderBy('created_at', 'desc')->get();
+        $user = Auth::user();
+        $tasks = Task::with('employee');
+        if ($user->role != 'HR') {
+            $tasks->where('assigned_to', $user->employee_id);
         }
+        $tasks = $tasks->latest()->get();
         return view('tasks.index', compact('tasks'));
     }
 

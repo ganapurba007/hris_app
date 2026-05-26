@@ -5,13 +5,21 @@ namespace App\Http\Controllers;
 use App\Models\Presence;
 use App\Models\Employee;
 use Illuminate\Http\Request;
+// use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class PresenceController extends Controller
 {
     public function index()
     {
         $employees = Employee::all();
-        $presences = Presence::orderBy('created_at', 'desc')->get();
+        $user = Auth::user();
+        if ($user->role == 'HR') {
+            $presences = Presence::latest()->get();
+        } else {
+            $presences = Presence::where('employee_id', $user->employee_id)->latest()->get();
+        }
         return view('presences.index', compact('presences', 'employees'));
     }
 
@@ -24,15 +32,27 @@ class PresenceController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'employee_id' => 'required',
-            'date' => 'required|date',
-            'check_in' => 'required|date',
-            'check_out' => 'required|date',
-            'status' => 'required|in:Present,Absent,Late,Leave',
-        ]);
+        if (session('role') == 'HR') {
+            $request->validate([
+                'employee_id' => 'required',
+                'date' => 'required|date',
+                'check_in' => 'required|date',
+                'check_out' => 'required|date',
+                'status' => 'required|in:Present,Absent,Late,Leave',
+            ]);
+            Presence::create($request->all());
+        } else {
+            Presence::create([
+                'employee_id' => Auth::user()->employee_id,
+                'check_in' => Carbon::now()->format('Y-m-d H:i:s'),
+                'latitude' => $request->latitude,
+                'longitude' => $request->longitude,
+                'date' => Carbon::now()->format('Y-m-d'),
+                'status' => 'Present',
+            ]);
+        }
 
-        Presence::create($validated);
+        // Presence::create($validated);
         return redirect()->route('presences.index')->with('success', 'Presence created successfully');
     }
 
