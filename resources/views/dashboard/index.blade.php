@@ -1,5 +1,7 @@
 @extends('layouts.dashboard')
 @section('section')
+@section('title', 'Dashboard')
+
     @php
         $isHR = session('role') == 'HR';
         $cards = $isHR
@@ -37,19 +39,19 @@
                     'color' => 'purple',
                 ],
                 [
-                    'title' => 'Pending Task',
+                    'title' => 'Pending Tasks',
                     'value' => $pending_task,
                     'icon' => 'dripicons-hourglass',
                     'color' => 'bg-warning',
                 ],
                 [
-                    'title' => 'In Progress Task',
+                    'title' => 'In Progress Tasks',
                     'value' => $in_progress_task,
                     'icon' => 'dripicons-loading',
                     'color' => 'blue',
                 ],
                 [
-                    'title' => 'Done Task',
+                    'title' => 'Done Tasks',
                     'value' => $done_task,
                     'icon' => 'dripicons-checkmark',
                     'color' => 'green',

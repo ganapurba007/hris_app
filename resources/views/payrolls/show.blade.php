@@ -1,18 +1,12 @@
 @extends('layouts.dashboard')
 @section('section')
+@section('title', 'Detail Payroll')
+@section('link', route('payrolls.index'))
+@section('page-title', 'Detail Payroll')
+@section('previous-title', 'List Data')
+
     <div class="page-title">
         <div class="row">
-            <div class="col-12 col-md-6 order-md-1 order-last">
-                <h3>Detail Payroll</h3>
-            </div>
-            <div class="col-12 col-md-6 order-md-2 order-first">
-                <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{ route('payrolls.index') }}">Payroll</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Detail Payroll</li>
-                    </ol>
-                </nav>
-            </div>
             <div class="col-md-12">
                 @if (session('error'))
                     <div class="alert alert-danger alert-dismissible fade show" role="alert">

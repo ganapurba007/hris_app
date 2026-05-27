@@ -1,18 +1,12 @@
 @extends('layouts.dashboard')
+@section('title', 'Detail Employee')
+@section('link', route('employees.index'))
+@section('page-title', 'Detail Employee')
+@section('previous-title', 'List Data')
 @section('section')
     <div class="page-title">
         <div class="row">
-            <div class="col-12 col-md-6 order-md-1 order-last">
-                <h3>Detail Employee</h3>
-            </div>
-            <div class="col-12 col-md-6 order-md-2 order-first">
-                <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{ route('employees.index') }}">Employee</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Detail Employee</li>
-                    </ol>
-                </nav>
-            </div>
+
             <div class="col-md-12">
                 @if (session('error'))
                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -120,4 +114,4 @@
             </div>
         </div>
     </section>
-@endsection;
+@endsection

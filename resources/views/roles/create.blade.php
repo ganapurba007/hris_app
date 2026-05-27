@@ -1,20 +1,9 @@
 @extends('layouts.dashboard')
 @section('section')
-    <div class="page-title">
-        <div class="row">
-            <div class="col-12 col-md-6 order-md-1 order-last">
-                <h3>New Role</h3>
-            </div>
-            <div class="col-12 col-md-6 order-md-2 order-first">
-                <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{ route('roles.index') }}">Roles</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">New Role</li>
-                    </ol>
-                </nav>
-            </div>
-        </div>
-    </div>
+@section('title', 'New Role')
+@section('link', route('roles.index'))
+@section('previous-title', 'List Data')
+@section('page-title', 'New Role')
 
     <section id="input-style">
         <div class="row">
