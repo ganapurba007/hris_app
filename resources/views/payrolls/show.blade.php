@@ -101,4 +101,4 @@
             document.body.innerHTML = originalContent;
         });
     </script>
-@endsection;
+@endsection

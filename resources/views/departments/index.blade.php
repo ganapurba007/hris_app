@@ -131,4 +131,4 @@
             $('#table1').DataTable();
         });
     </script>
-@endsection;
+@endsection

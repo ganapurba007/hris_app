@@ -145,4 +145,4 @@
         </div>
     </div>
     @endif
-@endsection;
+@endsection
