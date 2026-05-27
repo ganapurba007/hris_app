@@ -25,6 +25,7 @@
                         <div class="card-body">
                             @csrf
                             <div class="row">
+                                @if(session('role') == 'HR')
                                 <div class="col-md-12">
                                     <div class="form-group mb-3">
                                         <label for="employee_id" class="form-label">Employee</label>
@@ -44,6 +45,7 @@
                                         @enderror
                                     </div>
                                 </div>
+                                @endif
                                 <div class="col-md-12">
                                     <div class="form-group mb-3">
                                         <label for="leave_type" class="form-label">Type of Leave</label>

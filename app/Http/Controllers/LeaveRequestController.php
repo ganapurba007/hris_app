@@ -6,13 +6,18 @@ use App\Models\LeaveRequest;
 use App\Models\Employee;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class LeaveRequestController extends Controller
 {
     public function index()
     {
         $employees = Employee::all();
-        $leave_requests = LeaveRequest::orderBy('created_at', 'desc')->get();
+        if (session('role') == 'HR') {
+            $leave_requests = LeaveRequest::orderBy('created_at', 'desc')->get();
+        } else {
+            $leave_requests = LeaveRequest::where('employee_id', Auth::user()->employee_id)->orderBy('created_at', 'desc')->get();
+        }
         return view('leave_requests.index', compact('leave_requests', 'employees'));
     }
 
@@ -25,18 +30,28 @@ class LeaveRequestController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'employee_id' => 'required',
-            'leave_type' => 'required',
-            'start_date' => 'required|date',
-            'end_date' => 'required|date',
-            // 'status' => 'required',
-        ]);
+        if (session('role') == 'HR') {
+            $request->validate([
+                'employee_id' => 'required',
+                'leave_type' => 'required',
+                'start_date' => 'required|date',
+                'end_date' => 'required|date',
+                // 'status' => 'required',
+            ]);
 
-        $status = 'Pending';
-        $request->merge(['status' => $status]);
+            $status = 'Pending';
+            $request->merge(['status' => $status]);
+            LeaveRequest::create($request->all());
+        } else {
+            LeaveRequest::create([
+                'employee_id' => Auth::user()->employee_id,
+                'leave_type' => $request->leave_type,
+                'start_date' => $request->start_date,
+                'end_date' => $request->end_date,
+                'status' => 'Pending',
+            ]);
+        }
 
-        LeaveRequest::create($request->all());
         return redirect()->route('leave_requests.index')->with('success', 'Leave request created successfully');
     }
 

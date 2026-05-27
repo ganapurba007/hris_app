@@ -51,7 +51,9 @@
                                 <th>Date</th>
                                 {{-- <th>End Date</th> --}}
                                 <th>Status</th>
-                                <th>Options</th>
+                                @if (session('role') == 'HR')
+                                    <th>Options</th>
+                                @endif
                             </tr>
                         </thead>
                         <tbody>
@@ -59,7 +61,8 @@
                                 <tr>
                                     <td>{{ $leave->employee->fullname ?? '-' }} </td>
                                     <td>{{ $leave->leave_type }}</td>
-                                    <td>{{ $leave->start_date->format('d M Y') .' - '.  $leave->end_date->format('d M Y')}}</td>
+                                    <td>{{ $leave->start_date->format('d M Y') . ' - ' . $leave->end_date->format('d M Y') }}
+                                    </td>
                                     {{-- <td>{{ $leave->end_date->format('d M Y') }}</td> --}}
                                     <td>
                                         @if ($leave->status === 'pending')
@@ -70,41 +73,45 @@
                                             <span class="badge bg-danger">Rejected</span>
                                         @endif
                                     </td>
-                                    <td class="space-x-1 py-2">
-                                        @if ($leave->status === 'rejected' || $leave->status === 'pending' )
-                                        <a href="{{ route('leave_requests.approved', $leave->id) }}" class="btn btn-success btn-sm">
-                                            <i class="bi bi-check-square-fill"></i>
-                                        </a>
-                                        @endif
-                                        @if($leave->status === 'approved' || $leave->status === 'pending')
-                                        <a href="{{ route('leave_requests.rejected', $leave->id) }}" class="btn btn-secondary btn-sm">
-                                            <i class="bi bi-x-square-fill"></i>
-                                        </a>
-                                        @endif ()
-                                        <a href="{{ route('leave_requests.show', $leave->id) }}" class="btn btn-info btn-sm">
+                                    @if (session('role') == 'HR')
+                                        <td class="space-x-1 py-2">
+                                            @if ($leave->status === 'rejected' || $leave->status === 'pending')
+                                                <a href="{{ route('leave_requests.approved', $leave->id) }}"
+                                                    class="btn btn-success btn-sm">
+                                                    <i class="bi bi-check-square-fill"></i>
+                                                </a>
+                                            @endif
+                                            @if ($leave->status === 'approved' || $leave->status === 'pending')
+                                                <a href="{{ route('leave_requests.rejected', $leave->id) }}"
+                                                    class="btn btn-secondary btn-sm">
+                                                    <i class="bi bi-x-square-fill"></i>
+                                                </a>
+                                            @endif ()
+                                            {{-- <a href="{{ route('leave_requests.show', $leave->id) }}" class="btn btn-info btn-sm">
                                             <i class="bi bi-eye-fill"></i>
-                                        </a>
-                                        <a href="{{ route('leave_requests.edit', $leave->id) }}" class="btn btn-warning btn-sm">
-                                            <i class="bi bi-pencil-square"></i>
-                                        </a>
-                                         {{-- MODAL --}}
-                                        {{-- <button type="button" class="btn btn-danger btn-sm block" data-bs-toggle="modal"
+                                        </a> --}}
+                                            <a href="{{ route('leave_requests.edit', $leave->id) }}"
+                                                class="btn btn-warning btn-sm">
+                                                <i class="bi bi-pencil-square"></i>
+                                            </a>
+                                            {{-- MODAL --}}
+                                            {{-- <button type="button" class="btn btn-danger btn-sm block" data-bs-toggle="modal"
                                             data-bs-target="#deleteModal" data-id="{{ $leave->id }}"
                                             data-name="{{ $leave->fullname }}">
                                             <i class="bi bi-trash"></i>
                                         </button> --}}
 
-                                        {{-- CONFIRM BAWAAN BROWSER --}}
-                                        <form action="{{ route('leave_requests.destroy', $leave->id) }}" method="POST"
-                                            style="display:inline"
-                                            onsubmit="return confirm('Are you sure you want to delete {{ $leave->employee->fullname ?? 'this data' }}?')">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger btn-sm">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </form>
-
+                                            {{-- CONFIRM BAWAAN BROWSER --}}
+                                            <form action="{{ route('leave_requests.destroy', $leave->id) }}" method="POST"
+                                                style="display:inline"
+                                                onsubmit="return confirm('Are you sure you want to delete {{ $leave->employee->fullname ?? 'this data' }}?')">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-danger btn-sm">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </form>
+                                    @endif
                                     </td>
                                 </tr>
                             @endforeach
@@ -138,7 +145,8 @@
                         <i class="bx bx-x d-block d-sm-none"></i>
                         <span class="d-none d-sm-block">Cancel</span>
                     </button>
-                    <form action="{{ route('leave_requests.destroy', $leave->id) }}" method="POST" style="display: inline">
+                    <form action="{{ route('leave_requests.destroy', $leave->id) }}" method="POST"
+                        style="display: inline">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="btn btn-danger ms-1" data-bs-dismiss="modal">
