@@ -28,11 +28,10 @@
 
     {{-- Datepicker --}}
     <link rel="stylesheet" href="{{ asset('template/assets/extensions/flatpickr/flatpickr.min.css') }}">
-
-
-
-
-
+    
+    {{-- Icon --}}
+    <link rel="stylesheet" href="{{ asset('template\assets\extensions\@icon\dripicons\dripicons.css') }}">
+    <link rel="stylesheet" href="{{ asset('template\assets\compiled\css\ui-icons-dripicons.css') }}">
 
 
 </head>
@@ -204,6 +203,8 @@
     {{-- Datepicker --}}
     <script src="{{ asset('template/assets/extensions/flatpickr/flatpickr.min.js') }}"></script>
     <script src="{{ asset('template/assets/static/js/pages/date-picker.js') }}"></script>
+    
+
 </body>
 
 </html>

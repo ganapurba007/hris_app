@@ -21,6 +21,7 @@ Route::get('/', function () {
 
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard')->middleware(['role:HR,Backend Developer,Frontend Developer,Finance Staff']);
+    Route::get('/dashboard/presences', [DashboardController::class, 'presences']);
 
     // HR
     Route::middleware(['role:HR'])->group(function () {
