@@ -5,96 +5,96 @@
 {{-- @section('page-title', 'Payrolls') --}}
 @section('previous-title', 'List Data')
 
-        <section class="section">
-            <div class="card">
-                <div class="card-header d-flex align-items-center justify-content-between">
-                    <h5 class="card-title">
-                        List Data
-                    </h5>
-                    <div class="align-item-center">
-                        @if (session('role') == 'HR')
-                            <a href="{{ route('payrolls.create') }}" class="btn btn-primary">
-                                <i class="bi bi-plus-circle-fill"></i>&nbsp;
-                                New Payroll</a>
-                        @endif
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-12">
-                            @if (session('success'))
-                                <div class="alert alert-success alert-dismissible fade show" role="alert"><i
-                                        class="bi bi-check-circle"></i>
-                                    {{ session('success') }}.
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                        aria-label="Close"></button>
-                                </div>
-                            @endif
+<section class="section">
+    <div class="card">
+        <div class="card-header d-flex align-items-center justify-content-between">
+            <h5 class="card-title">
+                List Data
+            </h5>
+            <div class="align-item-center">
+                @if (session('role') == 'HR')
+                    <a href="{{ route('payrolls.create') }}" class="btn btn-primary">
+                        <i class="bi bi-plus-circle-fill"></i>&nbsp;
+                        New Payroll</a>
+                @endif
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-12">
+                    @if (session('success'))
+                        <div class="alert alert-success alert-dismissible fade show" role="alert"><i
+                                class="bi bi-check-circle"></i>
+                            {{ session('success') }}.
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                aria-label="Close"></button>
                         </div>
-                    </div>
-                    <table class="table table-striped" id="table1">
-                        <thead>
-                            <tr>
-                                <th>Employee</th>
-                                <th>Salary</th>
-                                <th>Bonuses</th>
-                                <th>Deduction</th>
-                                <th>Net Salary</th>
-                                <th>Pay Date</th>
-                                <th>Options</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($payrolls as $payroll)
-                                <tr>
-                                    <td>{{ $payroll->employee->fullname ?? '-' }} </td>
-                                    <td>{{ number_format($payroll->salary) }}</td>
-                                    <td>{{ number_format($payroll->bonuses) }}</td>
-                                    <td>{{ number_format($payroll->deductions) ?? '-' }}</td>
-                                    <td>{{ number_format($payroll->net_salary) }}</td>
-                                    <td>{{ $payroll->pay_date->format('d M Y') }}</td>
-                                    <td class="space-x-1 py-2">
-                                        <a href="{{ route('payrolls.show', $payroll->id) }}" class="btn btn-info btn-sm">
-                                            <i class="bi bi-eye-fill"></i>
-                                        </a>
-                                        @if (session('role') == 'HR')
-                                            <a href="{{ route('payrolls.edit', $payroll->id) }}"
-                                                class="btn btn-warning btn-sm">
-                                                <i class="bi bi-pencil-square"></i>
-                                            </a>
-                                        @endif
+                    @endif
+                </div>
+            </div>
+            <table class="table table-striped" id="table1">
+                <thead>
+                    <tr>
+                        <th>Employee</th>
+                        <th>Salary</th>
+                        <th>Bonuses</th>
+                        <th>Deduction</th>
+                        <th>Net Salary</th>
+                        <th>Pay Date</th>
+                        <th>Options</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($payrolls as $payroll)
+                        <tr>
+                            <td>{{ $payroll->employee->fullname ?? '-' }} </td>
+                            <td>{{ number_format($payroll->salary) }}</td>
+                            <td>{{ number_format($payroll->bonuses) }}</td>
+                            <td>{{ number_format($payroll->deductions) ?? '-' }}</td>
+                            <td>{{ number_format($payroll->net_salary) }}</td>
+                            <td>{{ $payroll->pay_date->format('d M Y') }}</td>
+                            <td class="space-x-1 py-2">
+                                <a href="{{ route('payrolls.show', $payroll->id) }}" class="btn btn-info btn-sm">
+                                    <i class="bi bi-eye-fill"></i>
+                                </a>
+                                @if (session('role') == 'HR')
+                                    <a href="{{ route('payrolls.edit', $payroll->id) }}" class="btn btn-warning btn-sm">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+                                @endif
 
-                                        {{-- MODAL --}}
-                                        {{-- <button type="button" class="btn btn-danger btn-sm block" data-bs-toggle="modal"
+                                {{-- MODAL --}}
+                                {{-- <button type="button" class="btn btn-danger btn-sm block" data-bs-toggle="modal"
                                             data-bs-target="#deleteModal" data-id="{{ $payroll->id }}"
                                             data-name="{{ $payroll->fullname }}">
                                             <i class="bi bi-trash"></i>
                                         </button> --}}
 
-                                        {{-- CONFIRM BAWAAN BROWSER --}}
-                                        @if (session('role') == 'HR')
-                                            <form action="{{ route('payrolls.destroy', $payroll->id) }}" method="POST"
-                                                style="display:inline"
-                                                onsubmit="return confirm('Are you sure you want to delete {{ $payroll->employee->fullname ?? 'this data' }}?')">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-danger btn-sm">
-                                                    <i class="bi bi-trash"></i>
-                                                </button>
-                                            </form>
-                                        @endif
+                                {{-- CONFIRM BAWAAN BROWSER --}}
+                                @if (session('role') == 'HR')
+                                    <form action="{{ route('payrolls.destroy', $payroll->id) }}" method="POST"
+                                        style="display:inline"
+                                        onsubmit="return confirm('Are you sure you want to delete {{ $payroll->employee->fullname ?? 'this data' }}?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger btn-sm">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                @endif
 
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
 
 
-    {{-- MODAL --}}
+{{-- MODAL --}}
+@if (session('role') === 'HR')
     <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalTitle"
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-centered modal-dialog-scrollable" role="document">
@@ -116,7 +116,8 @@
                         <i class="bx bx-x d-block d-sm-none"></i>
                         <span class="d-none d-sm-block">Cancel</span>
                     </button>
-                    <form action="{{ route('payrolls.destroy', $payroll->id) }}" method="POST" style="display: inline">
+                    <form action="{{ route('payrolls.destroy', $payroll->id) }}" method="POST"
+                        style="display: inline">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="btn btn-danger ms-1" data-bs-dismiss="modal">
@@ -129,4 +130,5 @@
             </div>
         </div>
     </div>
+@endif
 @endsection
