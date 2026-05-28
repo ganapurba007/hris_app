@@ -166,22 +166,26 @@
                     <i class="bi bi-justify fs-3"></i>
                 </a>
             </header>
-            @if(!request()->is('dashboard'))
-            <div class="page-title">
-                <div class="row">
-                    <div class="col-12 col-md-6 order-md-1 order-last">
-                        <h3>@yield('title')</h3>
-                    </div>
-                    <div class="col-12 col-md-6 order-md-2 order-first">
-                        <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
-                            <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="@yield('link')">@yield('previous-title')</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">@yield('page-title')</li>
-                            </ol>
-                        </nav>
+            @if (!request()->is('dashboard') || !request()->is('/'))
+                <div class="page-title">
+                    <div class="row">
+                        <div class="col-12 col-md-6 order-md-1 order-last">
+                            <h3>@yield('title')</h3>
+                        </div>
+                        <div class="col-12 col-md-6 order-md-2 order-first">
+                            <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
+                                @if (!request()->is('dashboard') || !request()->is('/'))
+                                @else
+                                    <ol class="breadcrumb">
+                                        <li class="breadcrumb-item"><a href="@yield('link')">@yield('previous-title')</a>
+                                        </li>
+                                        <li class="breadcrumb-item active" aria-current="page">@yield('page-title')</li>
+                                    </ol>
+                                @endif
+                            </nav>
+                        </div>
                     </div>
                 </div>
-            </div>
             @endif
             @yield('section')
 

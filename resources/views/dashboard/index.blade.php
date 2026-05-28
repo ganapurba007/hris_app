@@ -1,6 +1,10 @@
 @extends('layouts.dashboard')
 @section('section')
 @section('title', 'Dashboard')
+{{-- @section('link', route('dashboard.index')) --}}
+{{-- @section('page-title', 'Dashboard') --}}
+{{-- @section('page-previous', 'Dashboard') --}}
+
 
     @php
         $isHR = session('role') == 'HR';
@@ -59,10 +63,6 @@
             ];
 
     @endphp
-
-    <div class="page-heading">
-        <h3>Dashboard</h3>
-    </div>
 
     <div class="page-content">
         <section class="row">

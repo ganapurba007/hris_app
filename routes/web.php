@@ -15,11 +15,8 @@ use App\Models\Payroll;
 use App\Models\Role;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
 Route::middleware('auth')->group(function () {
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard')->middleware(['role:HR,Backend Developer,Frontend Developer,Finance Staff']);
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard')->middleware(['role:HR,Backend Developer,Frontend Developer,Finance Staff']);
     Route::get('/dashboard/presences', [DashboardController::class, 'presences']);
 
