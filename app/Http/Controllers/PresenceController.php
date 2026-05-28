@@ -15,7 +15,7 @@ class PresenceController extends Controller
     {
         $employees = Employee::all();
         $user = Auth::user();
-        if ($user->role == 'HR') {
+        if ($user->employee->role->title == 'HR') {
             $presences = Presence::latest()->get();
         } else {
             $presences = Presence::where('employee_id', $user->employee_id)->latest()->get();
@@ -54,6 +54,20 @@ class PresenceController extends Controller
 
         // Presence::create($validated);
         return redirect()->route('presences.index')->with('success', 'Presence created successfully');
+    }
+
+    public function check_out(Presence $presence)
+    {
+        return view('presences.check_out', compact('presence'));
+    }
+
+    public function check_out_process(Request $request, Presence $presence)
+    {
+        Presence::where('id', $presence->id)->update([
+            'check_out' => Carbon::now()->format('Y-m-d H:i:s'),
+        ]);
+
+        return redirect()->route('presences.index')->with('success', 'Presence checked out successfully');
     }
 
     public function edit(Presence $presence)

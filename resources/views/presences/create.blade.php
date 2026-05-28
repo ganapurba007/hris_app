@@ -135,7 +135,7 @@
                                 </div>
                                 <div class="card-footer">
                                     <button type="submit" class="btn btn-success me-3"
-                                        id="btn-present">Present</button>
+                                        id="btn-present" disabled>Present</button>
                                     <a href="{{ route('presences.index') }}" class="btn btn-secondary">Back to List</a>
                                 </div>
                         </form>

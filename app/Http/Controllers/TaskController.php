@@ -14,7 +14,7 @@ class TaskController extends Controller
     {
         $user = Auth::user();
         $tasks = Task::with('employee');
-        if ($user->role != 'HR') {
+        if ($user->employee->role->title != 'HR') {
             $tasks->where('assigned_to', $user->employee_id);
         }
         $tasks = $tasks->latest()->get();

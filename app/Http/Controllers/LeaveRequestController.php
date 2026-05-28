@@ -12,8 +12,9 @@ class LeaveRequestController extends Controller
 {
     public function index()
     {
+        $user = Auth::user();
         $employees = Employee::all();
-        if (session('role') == 'HR') {
+        if ($user->employee->role->title == 'HR') {
             $leave_requests = LeaveRequest::orderBy('created_at', 'desc')->get();
         } else {
             $leave_requests = LeaveRequest::where('employee_id', Auth::user()->employee_id)->orderBy('created_at', 'desc')->get();

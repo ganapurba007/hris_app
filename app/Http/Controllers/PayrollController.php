@@ -14,7 +14,7 @@ class PayrollController extends Controller
     {
         $employees = Employee::all();
         $user = Auth::user();
-        if ($user->role == 'HR') {
+        if ($user->employee->role->title == 'HR') {
             $payrolls = Payroll::orderBy('created_at', 'desc')->get();
         } else {
             $payrolls = Payroll::where('employee_id', $user->employee_id)->orderBy('created_at', 'desc')->get();

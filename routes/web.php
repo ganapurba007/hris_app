@@ -31,6 +31,8 @@ Route::middleware('auth')->group(function () {
 
     // STAFF
     Route::resource('/presences', PresenceController::class)->middleware(['role:HR,Backend Developer,Frontend Developer,Finance Staff']);
+    Route::get('presences/check_out/{presence}', [PresenceController::class, 'check_out'])->name('presences.check_out')->middleware(['role:HR,Backend Developer,Frontend Developer,Finance Staff']);
+    Route::post('presences/check_out_process/{presence}', [PresenceController::class, 'check_out_process'])->name('presences.check_out_process')->middleware(['role:HR,Backend Developer,Frontend Developer,Finance Staff']);
     Route::resource('/payrolls', PayrollController::class)->middleware(['role:HR,Backend Developer,Frontend Developer,Finance Staff']);
     Route::resource('/tasks', TaskController::class)->middleware(['role:HR,Backend Developer,Frontend Developer,Finance Staff']);
     Route::get('tasks/done/{id}', [TaskController::class, 'done'])->name('tasks.done')->middleware(['role:HR,Backend Developer,Frontend Developer,Finance Staff']);
