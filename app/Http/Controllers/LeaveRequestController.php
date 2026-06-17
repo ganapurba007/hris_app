@@ -24,6 +24,7 @@ class LeaveRequestController extends Controller
 
     public function create()
     {
+        $this->authorize('create', LeaveRequest::class);
         $employees = Employee::where('status', 'active')->get();
         $leave_requests = LeaveRequest::all();
         return view('leave_requests.create', compact('employees', 'leave_requests'));
@@ -31,6 +32,7 @@ class LeaveRequestController extends Controller
 
     public function store(Request $request)
     {
+        $this->authorize('create', LeaveRequest::class);
         if (session('role') == 'HR') {
             $request->validate([
                 'employee_id' => 'required',
@@ -58,6 +60,7 @@ class LeaveRequestController extends Controller
 
     public function edit(LeaveRequest $leave_request)
     {
+        $this->authorize('update', $leave_request);
         // dd($leave_request);
         $employees = Employee::where('status', 'active')->get();
         $leave_requests = LeaveRequest::all();
@@ -66,6 +69,7 @@ class LeaveRequestController extends Controller
 
     public function update(Request $request, LeaveRequest $leave_request)
     {
+        $this->authorize('update', $leave_request);
         $request->validate([
             'employee_id' => 'required',
             'leave_type' => 'required',
@@ -82,18 +86,21 @@ class LeaveRequestController extends Controller
 
     public function destroy(LeaveRequest $leave_request)
     {
+        $this->authorize('delete', $leave_request);
         $leave_request->delete();
         return redirect()->route('leave_requests.index')->with('success', 'Leave request deleted successfully');
     }
 
     public function approved(int $id)
     {
+        $this->authorize('approved', LeaveRequest::class);
         $leave_request = LeaveRequest::find($id);
         $leave_request->update(['status' => 'Approved']);
         return redirect()->route('leave_requests.index')->with('success', 'Leave request approved successfully');
     }
     public function rejected(int $id)
     {
+        $this->authorize('rejected', LeaveRequest::class);
         $leave_request = LeaveRequest::find($id);
         $leave_request->update(['status' => 'Rejected']);
         return redirect()->route('leave_requests.index')->with('success', 'Leave request rejected successfully');

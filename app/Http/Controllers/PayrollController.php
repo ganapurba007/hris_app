@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 class PayrollController extends Controller
 {
 
+
     public function index()
     {
         $employees = Employee::all();
@@ -24,11 +25,13 @@ class PayrollController extends Controller
 
     public function show(Payroll $payroll)
     {
+        $this->authorize('view', $payroll);
         $employees = Employee::findOrFail($payroll->employee_id);
         return view('payrolls.show', compact('payroll', 'employees'));
     }
     public function create()
     {
+        $this->authorize('create', Payroll::class);
         $employees = Employee::where('status', 'active')->get();
         $payrolls = Payroll::all();
         return view('payrolls.create', compact('employees', 'payrolls'));
@@ -36,6 +39,7 @@ class PayrollController extends Controller
 
     public function store(Request $request)
     {
+        $this->authorize('create', Payroll::class);
         $request->validate([
             'employee_id' => 'required',
             'pay_date' => 'required|date',
@@ -53,6 +57,7 @@ class PayrollController extends Controller
 
     public function edit(Payroll $payroll)
     {
+        $this->authorize('update', $payroll);
         $employees = Employee::where('status', 'active')->get();
         $payrolls = Payroll::all();
         return view('payrolls.edit', compact('payroll', 'employees', 'payrolls'));
@@ -60,6 +65,7 @@ class PayrollController extends Controller
 
     public function update(Request $request, Payroll $payroll)
     {
+        $this->authorize('update', $payroll);
         $request->validate([
             'employee_id' => 'required',
             'pay_date' => 'required|date',
@@ -77,6 +83,7 @@ class PayrollController extends Controller
 
     public function destroy(Payroll $payroll)
     {
+        $this->authorize('delete', $payroll);
         $payroll->delete();
         return redirect()->route('payrolls.index')->with('success', 'Payroll deleted successfully');
     }

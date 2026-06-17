@@ -228,7 +228,43 @@
     <script src="{{ asset('template/assets/extensions/flatpickr/flatpickr.min.js') }}"></script>
     <script src="{{ asset('template/assets/static/js/pages/date-picker.js') }}"></script>
 
+    {{-- SWEET ALERT --}}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+
+            document.addEventListener('submit', function(e) {
+
+                if (!e.target.classList.contains('delete-form')) {
+                    return;
+                }
+
+                e.preventDefault();
+
+                const form = e.target;
+                const itemName = form.dataset.name || 'this data';
+
+                const title = form.dataset.title || 'Are you sure?';
+                const text = form.dataset.text || 'This data will be deleted.';
+
+                Swal.fire({
+                    title: title,
+                    text: text,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Delete',
+                    cancelButtonText: 'Cancel'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+
+            });
+
+        });
+    </script>
 </body>
 
 </html>

@@ -26,12 +26,20 @@
                             <button type="button" class="btn-close" data-bs-dismiss="alert"
                                 aria-label="Close"></button>
                         </div>
+                    @elseif (session('error'))
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert"><i
+                                class="bi bi-x-circle"></i>
+                            {{ session('error') }}.
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                aria-label="Close"></button>
+                        </div>
                     @endif
                 </div>
             </div>
             <table class="table table-striped" id="table1">
                 <thead>
                     <tr>
+                        <th>#</th>
                         <th>Employee</th>
                         <th>Check In</th>
                         <th>Check Out</th>
@@ -43,6 +51,7 @@
                 <tbody>
                     @foreach ($presences as $presence)
                         <tr>
+                            <td>{{ $loop->iteration }}</td>
                             <td>{{ $presence->employee->fullname ?? '-' }} </td>
                             <td>{{ $presence->check_in }}</td>
                             <td>{{ $presence->check_out }}</td>
@@ -59,42 +68,33 @@
                                 @endif
                             </td>
                             <td class="space-x-1 py-2">
-                                {{-- <a href="{{ route('presences.show', $presence->id) }}" class="btn btn-info btn-sm">
-                                            <i class="bi bi-eye-fill"></i>
-                                        </a> --}}
-                                @if (session('role') == 'HR')
-                                    <a href="{{ route('presences.edit', $presence->id) }}"
-                                        class="btn btn-warning btn-sm">
+                                @can('update', $presence)
+                                    <a href="{{ route('presences.edit', $presence->id) }}" class="btn btn-warning btn-sm">
                                         <i class="bi bi-pencil-square"></i>
                                     </a>
+                                @endcan
+
+                                @if (is_null($presence->check_out) && \Carbon\Carbon::parse($presence->date)->isToday())
+                                    @can('checkout', $presence)
+                                        <a href="{{ route('presences.check_out', $presence) }}"
+                                            class="btn btn-secondary btn-sm">
+                                            <i class="bi bi-box-arrow-right"></i>
+                                        </a>
+                                    @endcan
                                 @endif
 
-                                @if (is_null($presence->check_out) && $presence->date == now()->toDateString())
-                                    <a href="{{ route('presences.check_out', $presence->id) }}"
-                                        class="btn btn-secondary btn-sm">
-                                        <i class="bi bi-box-arrow-right"></i>
-                                    </a>
-                                @endif
-
-                                {{-- MODAL --}}
-                                {{-- <button type="button" class="btn btn-danger btn-sm block" data-bs-toggle="modal"
-                                            data-bs-target="#deleteModal" data-id="{{ $presence->id }}"
-                                            data-name="{{ $presence->fullname }}">
-                                            <i class="bi bi-trash"></i>
-                                        </button> --}}
-
-                                {{-- CONFIRM BAWAAN BROWSER --}}
-                                @if (session('role') == 'HR')
+                                @can('delete', $presence)
                                     <form action="{{ route('presences.destroy', $presence->id) }}" method="POST"
-                                        style="display:inline"
-                                        onsubmit="return confirm('Are you sure you want to delete {{ $presence->employee->fullname ?? 'this data' }}?')">
+                                        class="delete-form m-0" data-title="Delete Presence"
+                                        data-text="Presence {{ $presence->employee->fullname ?? '-' }} will be permanently deleted.">
                                         @csrf
                                         @method('DELETE')
+
                                         <button type="submit" class="btn btn-danger btn-sm">
                                             <i class="bi bi-trash"></i>
                                         </button>
                                     </form>
-                                @endif
+                                @endcan
 
                             </td>
                         </tr>
@@ -105,40 +105,4 @@
     </div>
 </section>
 
-
-{{-- MODAL --}}
-{{-- <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalTitle"
-        aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-dialog-centered modal-dialog-scrollable" role="document">
-            <div class="modal-content">
-                <div class="modal-header bg-danger">
-                    <h5 class="text-white modal-title" id="deleteModalTitle">Confirmation
-                    </h5>
-                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                        <i data-feather="x"></i>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <p>
-                        Are you sure you want to delete this task?
-                    </p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">
-                        <i class="bx bx-x d-block d-sm-none"></i>
-                        <span class="d-none d-sm-block">Cancel</span>
-                    </button>
-                    <form action="{{ route('presences.destroy', $presence->id) }}" method="POST" style="display: inline">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-danger ms-1" data-bs-dismiss="modal">
-                            <i class="bx bx-check d-block d-sm-none"></i>
-                            <span class="d-none d-sm-block">Delete</span>
-                        </button>
-                    </form>
-
-                </div>
-            </div>
-        </div>
-    </div> --}}
 @endsection

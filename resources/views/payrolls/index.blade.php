@@ -29,12 +29,20 @@
                             <button type="button" class="btn-close" data-bs-dismiss="alert"
                                 aria-label="Close"></button>
                         </div>
+                    @elseif (session('error'))
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert"><i
+                                class="bi bi-x-circle"></i>
+                            {{ session('error') }}.
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                aria-label="Close"></button>
+                        </div>
                     @endif
                 </div>
             </div>
             <table class="table table-striped" id="table1">
                 <thead>
                     <tr>
+                        <th>#</th>
                         <th>Employee</th>
                         <th>Salary</th>
                         <th>Bonuses</th>
@@ -47,6 +55,7 @@
                 <tbody>
                     @foreach ($payrolls as $payroll)
                         <tr>
+                            <td>{{ $loop->iteration }}</td>
                             <td>{{ $payroll->employee->fullname ?? '-' }} </td>
                             <td>{{ number_format($payroll->salary) }}</td>
                             <td>{{ number_format($payroll->bonuses) }}</td>
@@ -57,31 +66,24 @@
                                 <a href="{{ route('payrolls.show', $payroll->id) }}" class="btn btn-info btn-sm">
                                     <i class="bi bi-eye-fill"></i>
                                 </a>
-                                @if (session('role') == 'HR')
+                                @can('update', $payroll)
                                     <a href="{{ route('payrolls.edit', $payroll->id) }}" class="btn btn-warning btn-sm">
                                         <i class="bi bi-pencil-square"></i>
                                     </a>
-                                @endif
+                                @endcan
 
-                                {{-- MODAL --}}
-                                {{-- <button type="button" class="btn btn-danger btn-sm block" data-bs-toggle="modal"
-                                            data-bs-target="#deleteModal" data-id="{{ $payroll->id }}"
-                                            data-name="{{ $payroll->fullname }}">
-                                            <i class="bi bi-trash"></i>
-                                        </button> --}}
-
-                                {{-- CONFIRM BAWAAN BROWSER --}}
-                                @if (session('role') == 'HR')
-                                    <form action="{{ route('payrolls.destroy', $payroll->id) }}" method="POST"
-                                        style="display:inline"
-                                        onsubmit="return confirm('Are you sure you want to delete {{ $payroll->employee->fullname ?? 'this data' }}?')">
+                                @can ('delete', $payroll)
+                                   <form action="{{ route('payrolls.destroy', $payroll->id) }}" method="POST"
+                                        class="delete-form m-0" data-title="Delete Payroll"
+                                        data-text="Payroll {{ $payroll->employee->fullname }} will be permanently deleted.">
                                         @csrf
                                         @method('DELETE')
+
                                         <button type="submit" class="btn btn-danger btn-sm">
                                             <i class="bi bi-trash"></i>
                                         </button>
                                     </form>
-                                @endif
+                                @endcan
 
                             </td>
                         </tr>
@@ -92,43 +94,4 @@
     </div>
 </section>
 
-
-{{-- MODAL --}}
-@if (session('role') === 'HR')
-    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalTitle"
-        aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-dialog-centered modal-dialog-scrollable" role="document">
-            <div class="modal-content">
-                <div class="modal-header bg-danger">
-                    <h5 class="text-white modal-title" id="deleteModalTitle">Confirmation
-                    </h5>
-                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                        <i data-feather="x"></i>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <p>
-                        Are you sure you want to delete this task?
-                    </p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">
-                        <i class="bx bx-x d-block d-sm-none"></i>
-                        <span class="d-none d-sm-block">Cancel</span>
-                    </button>
-                    <form action="{{ route('payrolls.destroy', $payroll->id) }}" method="POST"
-                        style="display: inline">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-danger ms-1" data-bs-dismiss="modal">
-                            <i class="bx bx-check d-block d-sm-none"></i>
-                            <span class="d-none d-sm-block">Delete</span>
-                        </button>
-                    </form>
-
-                </div>
-            </div>
-        </div>
-    </div>
-@endif
 @endsection

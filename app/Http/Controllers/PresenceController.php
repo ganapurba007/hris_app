@@ -58,6 +58,7 @@ class PresenceController extends Controller
 
     public function check_out(Presence $presence)
     {
+        $this->authorize('checkout', $presence);
         return view('presences.check_out', compact('presence'));
     }
 
@@ -72,6 +73,7 @@ class PresenceController extends Controller
 
     public function edit(Presence $presence)
     {
+        $this->authorize('update', $presence);
         $employees = Employee::where('status', 'active')->get();
         $presences = Presence::all();
         return view('presences.edit', compact('presence', 'employees', 'presences'));
@@ -79,6 +81,7 @@ class PresenceController extends Controller
 
     public function update(Request $request, Presence $presence)
     {
+        $this->authorize('update', $presence);
         $validated = $request->validate([
             'employee_id' => 'required',
             'date' => 'required|date',
@@ -93,6 +96,7 @@ class PresenceController extends Controller
 
     public function destroy(Presence $presence)
     {
+        $this->authorize('delete', $presence);
         $presence->delete();
         return redirect()->route('presences.index')->with('success', 'Presence deleted successfully');
     }
