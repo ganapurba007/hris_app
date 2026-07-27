@@ -73,7 +73,7 @@
                                     <a href="{{ route('tasks.edit', $task->id) }}" class="btn btn-warning btn-sm">
                                         <i class="bi bi-pencil-square"></i>
                                     </a>
-                                @endif
+                                @endcan
                                 @if ($task->status === 'Pending' || $task->status === 'In Progress')
                                     <a href="{{ route('tasks.done', $task->id) }}" class="btn btn-success btn-sm">
                                         <i class="bi bi-check-square-fill"></i>

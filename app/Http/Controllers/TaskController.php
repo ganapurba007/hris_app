@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Employee;
 use App\Models\Task;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -14,9 +15,10 @@ class TaskController extends Controller
 {
     public function index()
     {
+        $this->authorize('viewAny', Task::class);
         $user = Auth::user();
         $tasks = Task::with('employee');
-        if ($user->employee->role->title != 'HR') {
+        if (!$user->isHr()) {
             $tasks->where('assigned_to', $user->employee_id);
         }
         $tasks = $tasks->latest()->get();

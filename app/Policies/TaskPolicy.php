@@ -10,12 +10,12 @@ class TaskPolicy
 {
     public function viewAny(User $user): bool
     {
-        return false;
+        return true;
     }
 
     public function view(User $user, Task $task): bool
     {
-        if ($user->employee->role->title == 'HR') {
+        if ($user->isHr()) {
             return true;
         }
         return $task->assigned_to == $user->employee_id;
@@ -23,17 +23,17 @@ class TaskPolicy
 
     public function create(User $user): bool
     {
-        return $user->employee->role->title == 'HR';
+        return $user->isHr();
     }
 
     public function update(User $user, Task $task): bool
     {
-        return $user->employee->role->title == 'HR';
+        return $user->isHr();
     }
 
     public function delete(User $user, Task $task): bool
     {
-        return $user->employee->role->title == 'HR';
+        return $user->isHr();
     }
 
     public function restore(User $user, Task $task): bool
@@ -48,7 +48,7 @@ class TaskPolicy
 
     public function changeStatus(User $user, Task $task): bool
     {
-        if ($user->employee->role->title == 'HR') {
+        if ($user->isHr()) {
             return true;
         }
         return $task->assigned_to == $user->employee_id;

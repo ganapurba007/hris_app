@@ -46,6 +46,11 @@ class User extends Authenticatable implements MustVerifyEmail
         ];
     }
 
+    public function isHr(): bool
+    {
+        return $this->employee->role->title === 'HR';
+    }
+
     public function employee()
     {
         return $this->belongsTo(Employee::class);
