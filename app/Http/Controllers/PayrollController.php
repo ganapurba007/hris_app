@@ -2,20 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Http\Requests\PayrollRequest;
 use App\Models\Payroll;
 use App\Models\Employee;
 use Illuminate\Support\Facades\Auth;
 
 class PayrollController extends Controller
 {
-
-
     public function index()
     {
         $employees = Employee::all();
         $user = Auth::user();
-        if ($user->employee->role->title == 'HR') {
+        if ($user->employee && $user->employee->role && $user->employee->role->title == 'HR') {
             $payrolls = Payroll::orderBy('created_at', 'desc')->get();
         } else {
             $payrolls = Payroll::where('employee_id', $user->employee_id)->orderBy('created_at', 'desc')->get();
@@ -29,6 +27,7 @@ class PayrollController extends Controller
         $employees = Employee::findOrFail($payroll->employee_id);
         return view('payrolls.show', compact('payroll', 'employees'));
     }
+
     public function create()
     {
         $this->authorize('create', Payroll::class);
@@ -37,21 +36,15 @@ class PayrollController extends Controller
         return view('payrolls.create', compact('employees', 'payrolls'));
     }
 
-    public function store(Request $request)
+    public function store(PayrollRequest $request)
     {
         $this->authorize('create', Payroll::class);
-        $request->validate([
-            'employee_id' => 'required',
-            'pay_date' => 'required|date',
-            'salary' => 'required|numeric',
-            'bonuses' => 'required|numeric',
-            'deductions' => 'required|numeric',
-        ]);
+        $validated = $request->validated();
 
-        $net_salary = $request->input('salary') - $request->input('deductions') + $request->input('bonuses');
-        $request->merge(['net_salary' => $net_salary]);
+        $net_salary = $validated['salary'] - $validated['deductions'] + $validated['bonuses'];
+        $validated['net_salary'] = $net_salary;
 
-        Payroll::create($request->all());
+        Payroll::create($validated);
         return redirect()->route('payrolls.index')->with('success', 'Payroll created successfully');
     }
 
@@ -63,21 +56,15 @@ class PayrollController extends Controller
         return view('payrolls.edit', compact('payroll', 'employees', 'payrolls'));
     }
 
-    public function update(Request $request, Payroll $payroll)
+    public function update(PayrollRequest $request, Payroll $payroll)
     {
         $this->authorize('update', $payroll);
-        $request->validate([
-            'employee_id' => 'required',
-            'pay_date' => 'required|date',
-            'salary' => 'required|numeric',
-            'bonuses' => 'required|numeric',
-            'deductions' => 'required|numeric',
-        ]);
+        $validated = $request->validated();
 
-        $net_salary = $request->input('salary') - $request->input('deductions') + $request->input('bonuses');
-        $request->merge(['net_salary' => $net_salary]);
+        $net_salary = $validated['salary'] - $validated['deductions'] + $validated['bonuses'];
+        $validated['net_salary'] = $net_salary;
 
-        $payroll->update($request->all());
+        $payroll->update($validated);
         return redirect()->route('payrolls.index')->with('success', 'Payroll updated successfully');
     }
 

@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\PresenceRequest;
 use App\Models\Presence;
 use App\Models\Employee;
 use Illuminate\Http\Request;
-// use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
@@ -15,7 +15,7 @@ class PresenceController extends Controller
     {
         $employees = Employee::all();
         $user = Auth::user();
-        if ($user->employee->role->title == 'HR') {
+        if ($user->employee && $user->employee->role && $user->employee->role->title == 'HR') {
             $presences = Presence::latest()->get();
         } else {
             $presences = Presence::where('employee_id', $user->employee_id)->latest()->get();
@@ -30,17 +30,11 @@ class PresenceController extends Controller
         return view('presences.create', compact('employees', 'presences'));
     }
 
-    public function store(Request $request)
+    public function store(PresenceRequest $request)
     {
-        if (session('role') == 'HR') {
-            $request->validate([
-                'employee_id' => 'required',
-                'date' => 'required|date',
-                'check_in' => 'required|date',
-                'check_out' => 'required|date',
-                'status' => 'required|in:Present,Absent,Late,Leave',
-            ]);
-            Presence::create($request->all());
+        $user = Auth::user();
+        if ($user->employee && $user->employee->role && $user->employee->role->title == 'HR') {
+            Presence::create($request->validated());
         } else {
             Presence::create([
                 'employee_id' => Auth::user()->employee_id,
@@ -52,7 +46,6 @@ class PresenceController extends Controller
             ]);
         }
 
-        // Presence::create($validated);
         return redirect()->route('presences.index')->with('success', 'Presence created successfully');
     }
 
@@ -76,21 +69,13 @@ class PresenceController extends Controller
         $this->authorize('update', $presence);
         $employees = Employee::where('status', 'active')->get();
         $presences = Presence::all();
-        return view('presences.edit', compact('presence', 'employees', 'presences'));
+        return view('presences.create', compact('presence', 'employees', 'presences'));
     }
 
-    public function update(Request $request, Presence $presence)
+    public function update(PresenceRequest $request, Presence $presence)
     {
         $this->authorize('update', $presence);
-        $validated = $request->validate([
-            'employee_id' => 'required',
-            'date' => 'required|date',
-            'check_in' => 'required|date',
-            'check_out' => 'required|date',
-            'status' => 'required|in:Present,Absent,Late,Leave',
-        ]);
-
-        $presence->update($validated);
+        $presence->update($request->validated());
         return redirect()->route('presences.index')->with('success', 'Presence updated successfully');
     }
 

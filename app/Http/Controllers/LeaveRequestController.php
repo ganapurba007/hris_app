@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\LeaveRequestRequest;
 use App\Models\LeaveRequest;
 use App\Models\Employee;
-
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class LeaveRequestController extends Controller
@@ -14,7 +13,7 @@ class LeaveRequestController extends Controller
     {
         $user = Auth::user();
         $employees = Employee::all();
-        if ($user->employee->role->title == 'HR') {
+        if ($user->employee && $user->employee->role && $user->employee->role->title == 'HR') {
             $leave_requests = LeaveRequest::orderBy('created_at', 'desc')->get();
         } else {
             $leave_requests = LeaveRequest::where('employee_id', Auth::user()->employee_id)->orderBy('created_at', 'desc')->get();
@@ -30,21 +29,15 @@ class LeaveRequestController extends Controller
         return view('leave_requests.create', compact('employees', 'leave_requests'));
     }
 
-    public function store(Request $request)
+    public function store(LeaveRequestRequest $request)
     {
         $this->authorize('create', LeaveRequest::class);
-        if (session('role') == 'HR') {
-            $request->validate([
-                'employee_id' => 'required',
-                'leave_type' => 'required',
-                'start_date' => 'required|date',
-                'end_date' => 'required|date',
-                // 'status' => 'required',
-            ]);
-
-            $status = 'Pending';
-            $request->merge(['status' => $status]);
-            LeaveRequest::create($request->all());
+        $user = Auth::user();
+        
+        if ($user->employee && $user->employee->role && $user->employee->role->title == 'HR') {
+            $data = $request->validated();
+            $data['status'] = 'Pending';
+            LeaveRequest::create($data);
         } else {
             LeaveRequest::create([
                 'employee_id' => Auth::user()->employee_id,
@@ -61,26 +54,15 @@ class LeaveRequestController extends Controller
     public function edit(LeaveRequest $leave_request)
     {
         $this->authorize('update', $leave_request);
-        // dd($leave_request);
         $employees = Employee::where('status', 'active')->get();
         $leave_requests = LeaveRequest::all();
         return view('leave_requests.edit', compact('leave_request', 'employees', 'leave_requests'));
     }
 
-    public function update(Request $request, LeaveRequest $leave_request)
+    public function update(LeaveRequestRequest $request, LeaveRequest $leave_request)
     {
         $this->authorize('update', $leave_request);
-        $request->validate([
-            'employee_id' => 'required',
-            'leave_type' => 'required',
-            'start_date' => 'required|date',
-            'end_date' => 'required|date',
-        ]);
-
-        // $status = $request->input('status');
-        // $request->merge(['status' => $status]);
-
-        $leave_request->update($request->all());
+        $leave_request->update($request->validated());
         return redirect()->route('leave_requests.index')->with('success', 'Leave request updated successfully');
     }
 
@@ -94,14 +76,15 @@ class LeaveRequestController extends Controller
     public function approved(int $id)
     {
         $this->authorize('approved', LeaveRequest::class);
-        $leave_request = LeaveRequest::find($id);
+        $leave_request = LeaveRequest::findOrFail($id);
         $leave_request->update(['status' => 'Approved']);
         return redirect()->route('leave_requests.index')->with('success', 'Leave request approved successfully');
     }
+
     public function rejected(int $id)
     {
         $this->authorize('rejected', LeaveRequest::class);
-        $leave_request = LeaveRequest::find($id);
+        $leave_request = LeaveRequest::findOrFail($id);
         $leave_request->update(['status' => 'Rejected']);
         return redirect()->route('leave_requests.index')->with('success', 'Leave request rejected successfully');
     }

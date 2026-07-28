@@ -1,0 +1,37 @@
+<div class="row">
+    <div class="col-sm-12">
+        <div class="form-group mb-3">
+            <label class="form-label" for="name">Name</label>
+            <input type="text" name="name" id="name"
+                class="form-control round @error('name') is-invalid @enderror"
+                value="{{ old('name', $department->name ?? '') }}" placeholder="Name Input...">
+            @error('name')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
+        </div>
+    </div>
+    <div class="col-sm-12">
+        <div class="form-group mb-3">
+            <label for="description" class="form-label">Description</label>
+            <textarea class="form-control @error('description') is-invalid @enderror" name="description" id="description"
+                rows="3" placeholder="Description Input...">{{ old('description', $department->description ?? '') }}</textarea>
+            @error('description')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
+        </div>
+    </div>
+    <div class="col-md-12">
+        <div class="form-group mb-3">
+            <label for="status" class="form-label">Status</label>
+            <select name="status" id="status"
+                class="form-select @error('status') is-invalid @enderror">
+                <option value="">Select Status</option>
+                <option value="active" {{ old('status', $department->status ?? '') == 'active' ? 'selected' : '' }}>Active</option>
+                <option value="inactive" {{ old('status', $department->status ?? '') == 'inactive' ? 'selected' : '' }}>Inactive</option>
+            </select>
+            @error('status')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
+        </div>
+    </div>
+</div>
