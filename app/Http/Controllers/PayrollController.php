@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\PayrollRequest;
 use App\Models\Payroll;
 use App\Models\Employee;
+use App\Services\PayrollService;
 use Illuminate\Support\Facades\Auth;
 
 class PayrollController extends Controller
@@ -13,11 +14,13 @@ class PayrollController extends Controller
     {
         $employees = Employee::all();
         $user = Auth::user();
-        if ($user->employee && $user->employee->role && $user->employee->role->title == 'HR') {
+
+        if ($user->isHr()) {
             $payrolls = Payroll::orderBy('created_at', 'desc')->get();
         } else {
             $payrolls = Payroll::where('employee_id', $user->employee_id)->orderBy('created_at', 'desc')->get();
         }
+
         return view('payrolls.index', compact('payrolls', 'employees'));
     }
 
@@ -36,15 +39,11 @@ class PayrollController extends Controller
         return view('payrolls.create', compact('employees', 'payrolls'));
     }
 
-    public function store(PayrollRequest $request)
+    public function store(PayrollRequest $request, PayrollService $payrollService)
     {
         $this->authorize('create', Payroll::class);
-        $validated = $request->validated();
+        $payrollService->createPayroll($request->validated());
 
-        $net_salary = $validated['salary'] - $validated['deductions'] + $validated['bonuses'];
-        $validated['net_salary'] = $net_salary;
-
-        Payroll::create($validated);
         return redirect()->route('payrolls.index')->with('success', 'Payroll created successfully');
     }
 
@@ -56,15 +55,11 @@ class PayrollController extends Controller
         return view('payrolls.edit', compact('payroll', 'employees', 'payrolls'));
     }
 
-    public function update(PayrollRequest $request, Payroll $payroll)
+    public function update(PayrollRequest $request, Payroll $payroll, PayrollService $payrollService)
     {
         $this->authorize('update', $payroll);
-        $validated = $request->validated();
+        $payrollService->updatePayroll($payroll, $request->validated());
 
-        $net_salary = $validated['salary'] - $validated['deductions'] + $validated['bonuses'];
-        $validated['net_salary'] = $net_salary;
-
-        $payroll->update($validated);
         return redirect()->route('payrolls.index')->with('success', 'Payroll updated successfully');
     }
 

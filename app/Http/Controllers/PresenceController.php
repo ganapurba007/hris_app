@@ -5,21 +5,17 @@ namespace App\Http\Controllers;
 use App\Http\Requests\PresenceRequest;
 use App\Models\Presence;
 use App\Models\Employee;
+use App\Services\PresenceService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Carbon\Carbon;
 
 class PresenceController extends Controller
 {
-    public function index()
+    public function index(PresenceService $presenceService)
     {
         $employees = Employee::all();
-        $user = Auth::user();
-        if ($user->employee && $user->employee->role && $user->employee->role->title == 'HR') {
-            $presences = Presence::latest()->get();
-        } else {
-            $presences = Presence::where('employee_id', $user->employee_id)->latest()->get();
-        }
+        $presences = $presenceService->getPresencesForUser(Auth::user());
+
         return view('presences.index', compact('presences', 'employees'));
     }
 
@@ -30,21 +26,9 @@ class PresenceController extends Controller
         return view('presences.create', compact('employees', 'presences'));
     }
 
-    public function store(PresenceRequest $request)
+    public function store(PresenceRequest $request, PresenceService $presenceService)
     {
-        $user = Auth::user();
-        if ($user->employee && $user->employee->role && $user->employee->role->title == 'HR') {
-            Presence::create($request->validated());
-        } else {
-            Presence::create([
-                'employee_id' => Auth::user()->employee_id,
-                'check_in' => Carbon::now()->format('Y-m-d H:i:s'),
-                'latitude' => $request->latitude,
-                'longitude' => $request->longitude,
-                'date' => Carbon::now()->format('Y-m-d'),
-                'status' => 'Present',
-            ]);
-        }
+        $presenceService->createPresence(Auth::user(), $request->validated());
 
         return redirect()->route('presences.index')->with('success', 'Presence created successfully');
     }
@@ -55,11 +39,10 @@ class PresenceController extends Controller
         return view('presences.check_out', compact('presence'));
     }
 
-    public function check_out_process(Request $request, Presence $presence)
+    public function check_out_process(Request $request, Presence $presence, PresenceService $presenceService)
     {
-        Presence::where('id', $presence->id)->update([
-            'check_out' => Carbon::now()->format('Y-m-d H:i:s'),
-        ]);
+        $this->authorize('checkout', $presence);
+        $presenceService->checkoutPresence($presence);
 
         return redirect()->route('presences.index')->with('success', 'Presence checked out successfully');
     }
@@ -72,10 +55,11 @@ class PresenceController extends Controller
         return view('presences.create', compact('presence', 'employees', 'presences'));
     }
 
-    public function update(PresenceRequest $request, Presence $presence)
+    public function update(PresenceRequest $request, Presence $presence, PresenceService $presenceService)
     {
         $this->authorize('update', $presence);
-        $presence->update($request->validated());
+        $presenceService->updatePresence($presence, $request->validated());
+
         return redirect()->route('presences.index')->with('success', 'Presence updated successfully');
     }
 
