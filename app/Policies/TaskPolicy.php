@@ -13,12 +13,12 @@ class TaskPolicy
         return true;
     }
 
-    public function view(User $user, Task $task): bool
+    public function view(User $user, ?Task $task = null): bool
     {
         if ($user->isHr()) {
             return true;
         }
-        return $task->assigned_to == $user->employee_id;
+        return $task ? $task->assigned_to == $user->employee_id : false;
     }
 
     public function create(User $user): bool
@@ -26,31 +26,31 @@ class TaskPolicy
         return $user->isHr();
     }
 
-    public function update(User $user, Task $task): bool
+    public function update(User $user, ?Task $task = null): bool
     {
         return $user->isHr();
     }
 
-    public function delete(User $user, Task $task): bool
+    public function delete(User $user, ?Task $task = null): bool
     {
         return $user->isHr();
     }
 
-    public function restore(User $user, Task $task): bool
+    public function restore(User $user, ?Task $task = null): bool
     {
         return false;
     }
 
-    public function forceDelete(User $user, Task $task): bool
+    public function forceDelete(User $user, ?Task $task = null): bool
     {
         return false;
     }
 
-    public function changeStatus(User $user, Task $task): bool
+    public function changeStatus(User $user, ?Task $task = null): bool
     {
         if ($user->isHr()) {
             return true;
         }
-        return $task->assigned_to == $user->employee_id;
+        return $task ? $task->assigned_to == $user->employee_id : false;
     }
 }

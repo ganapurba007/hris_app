@@ -13,12 +13,12 @@ class PresencePolicy
         return true;
     }
 
-    public function view(User $user, Presence $presence): bool
+    public function view(User $user, ?Presence $presence = null): bool
     {
         if ($user->isHr()) {
             return true;
         }
-        return $presence->employee_id == $user->employee_id;
+        return $presence ? $presence->employee_id == $user->employee_id : false;
     }
 
     public function create(User $user): bool
@@ -26,31 +26,31 @@ class PresencePolicy
         return true;
     }
 
-    public function update(User $user, Presence $presence): bool
+    public function update(User $user, ?Presence $presence = null): bool
     {
         return $user->isHr();
     }
 
-    public function delete(User $user, Presence $presence): bool
+    public function delete(User $user, ?Presence $presence = null): bool
     {
         return $user->isHr();
     }
 
-    public function restore(User $user, Presence $presence): bool
+    public function restore(User $user, ?Presence $presence = null): bool
     {
         return false;
     }
 
-    public function forceDelete(User $user, Presence $presence): bool
+    public function forceDelete(User $user, ?Presence $presence = null): bool
     {
         return false;
     }
 
-    public function checkout(User $user, Presence $presence): bool
+    public function checkout(User $user, ?Presence $presence = null): bool
     {
         if ($user->isHr()) {
             return true;
         }
-        return $presence->employee_id == $user->employee_id;
+        return $presence ? $presence->employee_id == $user->employee_id : true;
     }
 }

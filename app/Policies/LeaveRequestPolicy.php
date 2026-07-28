@@ -19,12 +19,12 @@ class LeaveRequestPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, LeaveRequest $leaveRequest): bool
+    public function view(User $user, ?LeaveRequest $leaveRequest = null): bool
     {
         if ($user->isHr()) {
             return true;
         }
-        return $leaveRequest->employee_id == $user->employee_id;
+        return $leaveRequest ? $leaveRequest->employee_id == $user->employee_id : false;
     }
 
     /**
@@ -38,7 +38,7 @@ class LeaveRequestPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, LeaveRequest $leaveRequest): bool
+    public function update(User $user, ?LeaveRequest $leaveRequest = null): bool
     {
         return $user->isHr();
     }
@@ -46,7 +46,7 @@ class LeaveRequestPolicy
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, LeaveRequest $leaveRequest): bool
+    public function delete(User $user, ?LeaveRequest $leaveRequest = null): bool
     {
         return $user->isHr();
     }
@@ -54,7 +54,7 @@ class LeaveRequestPolicy
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, LeaveRequest $leaveRequest): bool
+    public function restore(User $user, ?LeaveRequest $leaveRequest = null): bool
     {
         return false;
     }
@@ -62,17 +62,17 @@ class LeaveRequestPolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, LeaveRequest $leaveRequest): bool
+    public function forceDelete(User $user, ?LeaveRequest $leaveRequest = null): bool
     {
         return false;
     }
 
-    public function approved(User $user, LeaveRequest $leaveRequest): bool
+    public function approved(User $user, ?LeaveRequest $leaveRequest = null): bool
     {
         return $user->isHr();
     }
 
-    public function rejected(User $user, LeaveRequest $leaveRequest): bool
+    public function rejected(User $user, ?LeaveRequest $leaveRequest = null): bool
     {
         return $user->isHr();
     }

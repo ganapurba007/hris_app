@@ -13,12 +13,12 @@ class PayrollPolicy
         return true;
     }
 
-    public function view(User $user, Payroll $payroll): bool
+    public function view(User $user, ?Payroll $payroll = null): bool
     {
         if ($user->isHr()) {
             return true;
         }
-        return $payroll->employee_id == $user->employee_id;
+        return $payroll ? $payroll->employee_id == $user->employee_id : false;
     }
 
     public function create(User $user): bool
@@ -26,22 +26,22 @@ class PayrollPolicy
         return $user->isHr();
     }
 
-    public function update(User $user, Payroll $payroll): bool
+    public function update(User $user, ?Payroll $payroll = null): bool
     {
         return $user->isHr();
     }
 
-    public function delete(User $user, Payroll $payroll): bool
+    public function delete(User $user, ?Payroll $payroll = null): bool
     {
         return $user->isHr();
     }
 
-    public function restore(User $user, Payroll $payroll): bool
+    public function restore(User $user, ?Payroll $payroll = null): bool
     {
         return false;
     }
 
-    public function forceDelete(User $user, Payroll $payroll): bool
+    public function forceDelete(User $user, ?Payroll $payroll = null): bool
     {
         return false;
     }
