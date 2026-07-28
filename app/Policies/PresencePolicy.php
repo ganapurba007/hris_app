@@ -10,12 +10,12 @@ class PresencePolicy
 {
     public function viewAny(User $user): bool
     {
-        return false;
+        return true;
     }
 
     public function view(User $user, Presence $presence): bool
     {
-        if ($user->employee->role->title == 'HR') {
+        if ($user->isHr()) {
             return true;
         }
         return $presence->employee_id == $user->employee_id;
@@ -26,14 +26,14 @@ class PresencePolicy
         return true;
     }
 
-    public function update(User $user): bool
+    public function update(User $user, Presence $presence): bool
     {
-        return $user->employee->role->title == 'HR';
+        return $user->isHr();
     }
 
-    public function delete(User $user): bool
+    public function delete(User $user, Presence $presence): bool
     {
-        return $user->employee->role->title == 'HR';
+        return $user->isHr();
     }
 
     public function restore(User $user, Presence $presence): bool
@@ -48,7 +48,7 @@ class PresencePolicy
 
     public function checkout(User $user, Presence $presence): bool
     {
-        if ($user->employee->role->title == 'HR') {
+        if ($user->isHr()) {
             return true;
         }
         return $presence->employee_id == $user->employee_id;

@@ -13,7 +13,7 @@ class LeaveRequestPolicy
      */
     public function viewAny(User $user): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -21,7 +21,7 @@ class LeaveRequestPolicy
      */
     public function view(User $user, LeaveRequest $leaveRequest): bool
     {
-        if ($user->employee->role->title == 'HR') {
+        if ($user->isHr()) {
             return true;
         }
         return $leaveRequest->employee_id == $user->employee_id;
@@ -38,17 +38,17 @@ class LeaveRequestPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user): bool
+    public function update(User $user, LeaveRequest $leaveRequest): bool
     {
-        return $user->employee->role->title == 'HR';
+        return $user->isHr();
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user): bool
+    public function delete(User $user, LeaveRequest $leaveRequest): bool
     {
-        return $user->employee->role->title == 'HR';
+        return $user->isHr();
     }
 
     /**
@@ -69,11 +69,11 @@ class LeaveRequestPolicy
 
     public function approved(User $user, LeaveRequest $leaveRequest): bool
     {
-        return $user->leaveRequest->role->title == 'HR';
+        return $user->isHr();
     }
 
     public function rejected(User $user, LeaveRequest $leaveRequest): bool
     {
-        return $user->leaveRequest->role->title == 'HR';
+        return $user->isHr();
     }
 }
