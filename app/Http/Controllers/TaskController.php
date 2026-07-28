@@ -8,6 +8,7 @@ use App\Models\Task;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\TaskRequest;
 
 
 
@@ -32,19 +33,10 @@ class TaskController extends Controller
         return view('tasks.create', compact('employees'));
     }
 
-    public function store(Request $request)
+    public function store(TaskRequest $request)
     {
         $this->authorize('create', Task::class);
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string|max:255',
-            'assigned_to' => 'required|exists:employees,id',
-            'due_date' => 'required|date',
-            'status' => 'required|in:Pending,In Progress',
-        ]);
-
-
-        Task::create($validated);
+        Task::create($request->validated());
         return redirect()->route('tasks.index')->with('success', 'Task created successfully');
     }
 
@@ -55,18 +47,10 @@ class TaskController extends Controller
         return view('tasks.edit', compact('task', 'employees'));
     }
 
-    public function update(Request $request, Task $task)
+    public function update(TaskRequest $request, Task $task)
     {
         $this->authorize('update', $task);
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string|max:255',
-            'assigned_to' => 'required|exists:employees,id',
-            'due_date' => 'required|date',
-            'status' => 'required|in:Pending,In Progress',
-        ]);
-
-        $task->update($validated);
+        $task->update($request->validated());
         return redirect()->route('tasks.index')->with('success', 'Task updated successfully');
     }
 
@@ -79,7 +63,7 @@ class TaskController extends Controller
     }
     public function pending(int $id)
     {
-        $task = Task::find($id);
+        $task = Task::findOrFail($id);
         $this->authorize('changeStatus', $task);
         $task->update(['status' => 'Pending']);
         return redirect()->route('tasks.index')->with('success', 'Task Mark as Pending successfully');
