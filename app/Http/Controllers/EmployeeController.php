@@ -6,6 +6,7 @@ use App\Models\Employee;
 use Illuminate\Http\Request;
 use App\Models\Department;
 use App\Models\Role;
+use App\Http\Requests\EmployeeRequest;
 
 class EmployeeController extends Controller
 {
@@ -23,22 +24,9 @@ class EmployeeController extends Controller
         return view('employees.create', compact('departments', 'roles'));
     }
 
-    public function store(Request $request)
+    public function store(EmployeeRequest $request)
     {
-        $validated = $request->validate([
-            'fullname' => 'required|string|max:255',
-            'email' => 'required|email',
-            'phone' => 'required|digits_between:10,12',
-            'address' => 'required|string|max:255',
-            'birth_date' => 'required|date',
-            'hire_date' => 'required|date',
-            'department_id' => 'required|exists:departments,id',
-            'role_id' => 'required|exists:roles,id',
-            'salary' => 'required|numeric|min:0|max_digits:20',
-            'status' => 'required|in:active,inactive,resigned',
-        ]);
-
-        Employee::create($validated);
+        Employee::create($request->validated());
         return redirect()->route('employees.index')->with('success', 'Employee created successfully');
     }
 
@@ -49,22 +37,9 @@ class EmployeeController extends Controller
         return view('employees.edit', compact('employee', 'departments', 'roles'));
     }
 
-    public function update(Request $request, Employee $employee)
+    public function update(EmployeeRequest $request, Employee $employee)
     {
-        $validated = $request->validate([
-            'fullname' => 'required|string|max:255',
-            'email' => 'required|email',
-            'phone' => 'required|digits_between:10,12',
-            'address' => 'required|string|max:255',
-            'birth_date' => 'required|date',
-            'hire_date' => 'required|date',
-            'department_id' => 'required|exists:departments,id',
-            'role_id' => 'required|exists:roles,id',
-            'salary' => 'required|numeric|min:0|max_digits:20',
-            'status' => 'required|in:active,inactive,resigned',
-        ]);
-
-        $employee->update($validated);
+        $employee->update($request->validated());
         return redirect()->route('employees.index')->with('success', 'Employee updated successfully');
     }
 
