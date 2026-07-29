@@ -19,7 +19,7 @@ class LeaveRequestRequest extends FormRequest
             'end_date' => 'required|date|after_or_equal:start_date',
         ];
 
-        if (session('role') == 'HR' || ($this->user() && $this->user()->employee && $this->user()->employee->role && $this->user()->employee->role->title == 'HR')) {
+        if (session('role') == 'HR' || ($this->user() && $this->user()->isHr())) {
             $rules['employee_id'] = 'required|exists:employees,id';
         }
 

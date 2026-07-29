@@ -48,7 +48,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function isHr(): bool
     {
-        return $this->employee->role->title === 'HR';
+        return $this->employee?->role?->title === 'HR';
     }
 
     public function employee()

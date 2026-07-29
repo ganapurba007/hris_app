@@ -13,10 +13,10 @@ class LeaveRequestController extends Controller
     {
         $user = Auth::user();
         $employees = Employee::all();
-        if ($user->employee && $user->employee->role && $user->employee->role->title == 'HR') {
+        if ($user && $user->isHr()) {
             $leave_requests = LeaveRequest::orderBy('created_at', 'desc')->get();
         } else {
-            $leave_requests = LeaveRequest::where('employee_id', Auth::user()->employee_id)->orderBy('created_at', 'desc')->get();
+            $leave_requests = LeaveRequest::where('employee_id', $user?->employee_id)->orderBy('created_at', 'desc')->get();
         }
         return view('leave_requests.index', compact('leave_requests', 'employees'));
     }
@@ -33,14 +33,14 @@ class LeaveRequestController extends Controller
     {
         $this->authorize('create', LeaveRequest::class);
         $user = Auth::user();
-        
-        if ($user->employee && $user->employee->role && $user->employee->role->title == 'HR') {
+
+        if ($user && $user->isHr()) {
             $data = $request->validated();
             $data['status'] = 'Pending';
             LeaveRequest::create($data);
         } else {
             LeaveRequest::create([
-                'employee_id' => Auth::user()->employee_id,
+                'employee_id' => $user?->employee_id,
                 'leave_type' => $request->leave_type,
                 'start_date' => $request->start_date,
                 'end_date' => $request->end_date,

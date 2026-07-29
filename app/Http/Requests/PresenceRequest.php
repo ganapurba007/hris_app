@@ -13,7 +13,7 @@ class PresenceRequest extends FormRequest
 
     public function rules(): array
     {
-        if (session('role') == 'HR' || ($this->user() && $this->user()->employee && $this->user()->employee->role && $this->user()->employee->role->title == 'HR')) {
+        if (session('role') == 'HR' || ($this->user() && $this->user()->isHr())) {
             return [
                 'employee_id' => 'required|exists:employees,id',
                 'date' => 'required|date',

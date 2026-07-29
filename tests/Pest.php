@@ -2,6 +2,10 @@
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
+use App\Models\User;
+use App\Models\Employee;
+use App\Models\Role;
+use App\Models\Department;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,33 +22,68 @@ pest()->extend(TestCase::class)
     ->use(RefreshDatabase::class)
     ->in('Feature');
 
-/*
-|--------------------------------------------------------------------------
-| Expectations
-|--------------------------------------------------------------------------
-|
-| When you're writing tests, you often need to check that values meet certain conditions. The
-| "expect()" function gives you access to a set of "expectations" methods that you can use
-| to assert different things. Of course, you may extend the Expectation API at any time.
-|
-*/
-
-expect()->extend('toBeOne', function () {
-    return $this->toBe(1);
-});
+pest()->extend(TestCase::class)
+    ->use(RefreshDatabase::class)
+    ->in('Unit');
 
 /*
 |--------------------------------------------------------------------------
-| Functions
+| Functions & Helpers
 |--------------------------------------------------------------------------
-|
-| While Pest is very powerful out-of-the-box, you may have some testing code specific to your
-| project that you don't want to repeat in every file. Here you can also expose helpers as
-| global functions to help you to reduce the number of lines of code in your test files.
-|
 */
 
-function something()
+function createHrUser(): User
 {
-    // ..
+    $department = Department::firstOrCreate(
+        ['name' => 'Human Resource'],
+        ['description' => 'HR Department', 'status' => 'active']
+    );
+
+    $role = Role::firstOrCreate(
+        ['title' => 'HR'],
+        ['description' => 'HR Role']
+    );
+
+    $employee = Employee::create([
+        'fullname' => 'HR Admin',
+        'email' => 'hr_' . uniqid() . '@example.com',
+        'birth_date' => '1990-01-01',
+        'hire_date' => '2020-01-01',
+        'department_id' => $department->id,
+        'role_id' => $role->id,
+        'status' => 'active',
+        'salary' => 5000,
+    ]);
+
+    return User::factory()->create([
+        'employee_id' => $employee->id,
+    ]);
+}
+
+function createStaffUser(string $roleTitle = 'Backend Developer'): User
+{
+    $department = Department::firstOrCreate(
+        ['name' => 'IT Department'],
+        ['description' => 'IT Department', 'status' => 'active']
+    );
+
+    $role = Role::firstOrCreate(
+        ['title' => $roleTitle],
+        ['description' => 'Staff Role']
+    );
+
+    $employee = Employee::create([
+        'fullname' => 'Staff Employee',
+        'email' => 'staff_' . uniqid() . '@example.com',
+        'birth_date' => '1995-05-05',
+        'hire_date' => '2022-01-01',
+        'department_id' => $department->id,
+        'role_id' => $role->id,
+        'status' => 'active',
+        'salary' => 3000,
+    ]);
+
+    return User::factory()->create([
+        'employee_id' => $employee->id,
+    ]);
 }

@@ -80,7 +80,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('employee_id')->constrained('employees')->restrictedOnDelete();
             $table->datetime('check_in');
-            $table->datetime('check_out');
+            $table->datetime('check_out')->nullable();
             $table->date('date');
             $table->enum('status', [
                 'Present',

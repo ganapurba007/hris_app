@@ -1,7 +1,7 @@
 <?php
 
-it('returns a successful response', function () {
-    $response = $this->get('/');
+it('returns a successful response for login route', function () {
+    $response = $this->get('/login');
 
     $response->assertStatus(200);
 });
