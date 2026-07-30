@@ -39,11 +39,10 @@ test('presence service creates manual entry for HR user', function () {
     $presence = $service->createPresence($hr, $data);
 
     expect($presence)->toBeInstanceOf(Presence::class);
-    expect($presence->employee_id)->toBe($staff->employee_id);
+    expect($presence->date->format('Y-m-d'))->toBe('2026-07-28');
     $this->assertDatabaseHas('presences', [
         'id' => $presence->id,
         'employee_id' => $staff->employee_id,
-        'date' => '2026-07-28',
     ]);
 });
 

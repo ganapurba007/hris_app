@@ -71,7 +71,7 @@ return new class extends Migration
             $table->string('leave_type');
             $table->date('start_date');
             $table->date('end_date');
-            $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
+            $table->enum('status', ['Pending', 'Approved', 'Rejected', 'pending', 'approved', 'rejected'])->default('Pending');
             $table->timestamps();
             $table->softDeletes();
         });
