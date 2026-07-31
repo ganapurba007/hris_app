@@ -12,16 +12,17 @@ class EmployeeController extends Controller
 {
     public function index()
     {
-        $employees = Employee::orderBy('created_at', 'desc')->get();
+        $employees = Employee::with(['department', 'role'])->orderBy('created_at', 'desc')->get();
         return view('employees.index', compact('employees'));
     }
 
 
     public function create()
     {
-        $departments = Department::get()->where('status', 'active');
+        $employee = new Employee();
+        $departments = Department::where('status', 'active')->get();
         $roles = Role::all();
-        return view('employees.create', compact('departments', 'roles'));
+        return view('employees.create', compact('employee', 'departments', 'roles'));
     }
 
     public function store(EmployeeRequest $request)

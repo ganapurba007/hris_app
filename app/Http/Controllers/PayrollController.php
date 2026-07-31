@@ -16,9 +16,9 @@ class PayrollController extends Controller
         $user = Auth::user();
 
         if ($user->isHr()) {
-            $payrolls = Payroll::orderBy('created_at', 'desc')->get();
+            $payrolls = Payroll::with('employee')->orderBy('created_at', 'desc')->get();
         } else {
-            $payrolls = Payroll::where('employee_id', $user->employee_id)->orderBy('created_at', 'desc')->get();
+            $payrolls = Payroll::with('employee')->where('employee_id', $user->employee_id)->orderBy('created_at', 'desc')->get();
         }
 
         return view('payrolls.index', compact('payrolls', 'employees'));
@@ -27,8 +27,8 @@ class PayrollController extends Controller
     public function show(Payroll $payroll)
     {
         $this->authorize('view', $payroll);
-        $employees = Employee::findOrFail($payroll->employee_id);
-        return view('payrolls.show', compact('payroll', 'employees'));
+        $payroll->load('employee');
+        return view('payrolls.show', compact('payroll'));
     }
 
     public function create()

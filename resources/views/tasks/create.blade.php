@@ -12,6 +12,7 @@
                 @csrf
                 @include('tasks._form')
                 <button type="submit" class="btn btn-success mt-3">Save Task</button>
+                <a href="{{ route('tasks.index') }}" class="btn btn-secondary mt-3">Back to List</a>
             </form>
         </div>
     </div>

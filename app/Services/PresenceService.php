@@ -14,10 +14,10 @@ class PresenceService
     public function getPresencesForUser(User $user)
     {
         if ($user->isHr()) {
-            return Presence::latest()->get();
+            return Presence::with('employee')->latest()->get();
         }
 
-        return Presence::where('employee_id', $user->employee_id)->latest()->get();
+        return Presence::with('employee')->where('employee_id', $user->employee_id)->latest()->get();
     }
 
     /**

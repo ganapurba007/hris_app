@@ -12,13 +12,12 @@ class LeaveRequestController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $employees = Employee::all();
         if ($user && $user->isHr()) {
-            $leave_requests = LeaveRequest::orderBy('created_at', 'desc')->get();
+            $leave_requests = LeaveRequest::with('employee')->orderBy('created_at', 'desc')->get();
         } else {
-            $leave_requests = LeaveRequest::where('employee_id', $user?->employee_id)->orderBy('created_at', 'desc')->get();
+            $leave_requests = LeaveRequest::with('employee')->where('employee_id', $user?->employee_id)->orderBy('created_at', 'desc')->get();
         }
-        return view('leave_requests.index', compact('leave_requests', 'employees'));
+        return view('leave_requests.index', compact('leave_requests'));
     }
 
     public function create()
